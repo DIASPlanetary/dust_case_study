@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from scipy.optimize import curve_fit
 
-#this line is just for GitHub functioninbg testing
 
 def exponential_function(X, A, K):
 
