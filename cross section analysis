@@ -1,0 +1,628 @@
+import math_tools as math_tools
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
+from scipy.optimize import curve_fit
+
+def exponential_function(X, A, K):
+
+    f = A*np.exp(-X/K)
+
+    return f
+
+
+def linear_function(E, A, K):
+
+    f = K+A*E
+
+    return f
+
+
+def gauss_shift(x, a, x0, sigma, d):
+
+    '''This is a gaussian function with a shift along the y-axis given by d'''
+
+    return a * np.exp(-(x - x0)**2 / (2 * sigma**2)) + d
+
+'''---------------O+'''
+directory = 'inputData/cross_sections/'
+cross_section_file = 'H+_O2_Basu1987.txt'
+Hplus_O2 = np.loadtxt(directory + cross_section_file)
+
+
+#cross_section_file = 'H+_O_Basu1987.txt'
+#Hplus_O_basu = np.loadtxt(directory + cross_section_file)
+
+#cross_section_file = 'H+_O_Stier1956.txt'
+#Hplus_O_stier = np.loadtxt(directory + cross_section_file)
+
+#cross_section_file = 'H+_O_Thompson1996.txt'
+#Hplus_O_thompson = np.loadtxt(directory + cross_section_file)
+
+
+#directory = 'inputData/cross_sections/'
+#cross_section_file = 'O+_O2_Luna2004.txt'
+#Oplus_O2_luna = np.loadtxt(directory + cross_section_file)
+
+#cross_section_file = 'O+_O_Jorgensen1965.txt'
+#Oplus_O_jorgensen = np.loadtxt(directory + cross_section_file)
+
+#cross_section_file = 'O+_O_Lo1971.txt'
+#Oplus_O_lo = np.loadtxt(directory + cross_section_file)
+
+
+#cross_section_file = 'H+_H2O_Gobet2001.txt'
+#Hplus_H2O_gobet = np.loadtxt(directory + cross_section_file)
+
+#cross_section_file = 'H+_H2O_Luna_2007.txt'
+#Hplus_H2O_luna = np.loadtxt(directory + cross_section_file)
+
+#cross_section_file = 'protons_h2o_berkner.txt'
+#Hplus_H2O_berkner = np.loadtxt(directory + cross_section_file)
+
+#cross_section_file = 'protons_h2o_chambers.txt'
+#Hplus_H2O_chambers = np.loadtxt(directory + cross_section_file)
+
+#cross_section_file = 'protons_h2o_dagnac.txt'
+#Hplus_H2O_dagnac = np.loadtxt(directory + cross_section_file)
+
+particleE_range_TP1 = np.array([80000, 220000])  # TP1
+particleE_range_TP2 = np.array([220000, 540000])  # TP2
+particleE_range_TP3 = np.array([540000, 1040000])  # TP3
+
+particleE_range_TS1 = np.array([512000, 960000])  # TS1
+particleE_range_TS2 = np.array([960000, 1984000])  # TS2
+particleE_range_TS3 = np.array([1984000, 9920000])  # TS3
+
+particleE_range_TO1 = np.array([253000, 512000])  # TO1
+particleE_range_TO2 = np.array([416000, 816000])  # TO2
+particleE_range_TO3 = np.array([816000, 1792000])  # TO3
+
+figDir = 'test/'
+
+'''-----------Fitting----------'''
+
+'''H+ O2'''
+cross_section_original = Hplus_O2
+particleE_range = np.array([220000, 540000])
+
+init = np.array([1, 2])  # initial guess for resp. A and B
+
+popt_sigma, pcov_sigma = curve_fit(math_tools.linear_function,
+                                   cross_section_original[:, 0],
+                                   np.log10(cross_section_original[:, 1]/10**16),
+                                   init)
+
+E_range = np.arange(1, 10**4)
+fit_Hplus_O2 = math_tools.linear_function(E_range, popt_sigma[0],
+                                          popt_sigma[1])
+
+'''O+ O'''
+E_range_3 = np.logspace(0, 4, 1000)
+#popt_sigma, pcov_sigma = curve_fit(math_tools.linear_function,
+#                                   np.log10(Oplus_O_lo[5:, 0]),
+#                                   np.log10(Oplus_O_lo[5:, 1]/10**16),
+#                                   init)
+
+#fit_lo_lin = math_tools.linear_function(E_range_3, popt_sigma[0],
+                              #          popt_sigma[1])
+
+#fit_lo_lin = 10**(fit_lo_lin)
+#fit_lo_lin[fit_lo_lin < 10**-28] = np.nan
+E_range_3 = 10**E_range_3
+
+#'''---------------final selection - figure for thesis'''
+#
+#fig = plt.figure(figsize=(7, 7))
+#ax = fig.gca()
+#
+#plt.plot(Hplus_O2[:, 0], Hplus_O2[:, 1]/10**16,
+#         label='H$^+$ O$_2$ Basu et al., 1987', c='blue')
+#plt.plot(E_range, 10**fit_Hplus_O2, label='H$^+$ O$_2$ fit', c='blue',
+#         linestyle='--')
+#
+#plt.plot(Oplus_O_lo[:, 0], Oplus_O_lo[:, 1]/10**16,
+#         label='O$^+$ O Lo et al., 1971', c='orange')
+#plt.plot(E_range_3, fit_lo_lin, label='O$^+$ O fit', c='orange',
+#         linestyle='-.')
+#
+#ax.axvline(particleE_range_TP1[0]/1000, color='red', linestyle='--',
+#           label='TP1-TP2-TP3')
+#ax.axvline(particleE_range_TP2[0]/1000, color='red', linestyle='--')
+#ax.axvline(particleE_range_TP3[0]/1000, color='red', linestyle='--')
+#ax.axvline(particleE_range_TP3[1]/1000, color='red', linestyle='--')
+#
+##ax.axvline(particleE_range_TO1[0]/1000, color='cyan', linestyle='--',
+##           label='TO')
+##ax.axvline(particleE_range_TO1[1]/1000, color='cyan', linestyle='--')
+#ax.axvline(particleE_range_TO2[0]/1000, color='cyan', linestyle='-.', 
+#           label='TO2-TO3')
+#ax.axvline(particleE_range_TO3[0]/1000, color='cyan', linestyle='-.')
+#ax.axvline(particleE_range_TO3[1]/1000, color='cyan', linestyle='--')
+##
+##ax.axvline(particleE_range_TS1[0]/1000, color='green', linestyle=':')
+##ax.axvline(particleE_range_TS2[0]/1000, color='green', linestyle='--',
+##           label='TS')
+##ax.axvline(particleE_range_TS3[0]/1000, color='green', linestyle='--')
+##ax.axvline(particleE_range_TS3[1]/1000, color='green', linestyle='--')
+#
+#plt.legend()
+#
+#ax.set_xlim(10**0, 3*10**4)
+#ax.set_ylim(10**-24, 10**-14)
+#
+#ax.set_xscale("log")
+#ax.set_yscale("log")
+#
+#plt.xlabel('Energy [keV]')
+#plt.ylabel(' Cross section [cm$^2$]')
+#
+#'''Save figure'''
+#figNr = 'compare_cross_sections'
+#fig.savefig(figDir+'Figure_'+figNr+'.svg')
+#fig.savefig(figDir+'Figure_'+figNr+'.png')
+#fig.savefig(figDir+'Figure_'+figNr+'.pdf')
+
+#'''--------------all options - figure for thesis'''
+#
+#fig = plt.figure(figsize=(10, 5))
+#
+#ax1 = fig.add_subplot(1, 2, 1)
+#
+#plt.plot(Hplus_O2[:, 0], Hplus_O2[:, 1]/10**16,
+#         label='H$^+$ O$_2$ Basu et al., 1987', c='blue')
+#
+#plt.plot(Hplus_O_basu[:, 0], Hplus_O_basu[:, 1]/10**16,
+#         label='H$^+$ O Basu et al., 1987', c='pink')
+#
+#plt.plot(Hplus_O_stier[:, 0], Hplus_O_stier[:, 1]/10**16,
+#         label='H$^+$ O Stier and Barnett, 1956', c='brown')
+#
+#plt.plot(Hplus_O_thompson[:, 0], Hplus_O_thompson[:, 1]/10**16,
+#         label='H$^+$ O Thompson et al., 1996', c='grey')
+#
+#ax1.axvline(particleE_range_TP1[0]/1000, color='red', linestyle='--',
+#            label='TP1-TP2-TP3')
+#ax1.axvline(particleE_range_TP2[0]/1000, color='red', linestyle='--')
+#ax1.axvline(particleE_range_TP3[0]/1000, color='red', linestyle='--')
+#ax1.axvline(particleE_range_TP3[1]/1000, color='red', linestyle='--')
+#
+#ax1.axvline(particleE_range_TO2[0]/1000, color='cyan', linestyle='-.',
+#            label='TO2-TO3')
+#ax1.axvline(particleE_range_TO3[0]/1000, color='cyan', linestyle='-.')
+#ax1.axvline(particleE_range_TO3[1]/1000, color='cyan', linestyle='--')
+#
+#plt.title('Protons on O and O$_2$')
+#
+#plt.legend()
+#
+#ax1.set_xlim(10**0, 3*10**4)
+#ax1.set_ylim(10**-24, 10**-14)
+#
+#ax1.set_xscale("log")
+#ax1.set_yscale("log")
+#
+#plt.xlabel('Energy [keV]')
+#plt.ylabel(' Cross section [cm$^2$]')
+#
+#
+#ax2 = fig.add_subplot(1, 2, 2)
+#
+#
+#plt.plot(Oplus_O_lo[:, 0], Oplus_O_lo[:, 1]/10**16,
+#         label='O$^+$ O Lo et al., 1971', c='orange')
+#
+#plt.plot(Oplus_O_jorgensen[:, 0], Oplus_O_jorgensen[:, 1]/10**16,
+#         label='O$^+$ O Jorgensen et al., 1965', c='magenta')
+#
+#plt.plot(Oplus_O2_luna[:, 0], Oplus_O2_luna[:, 1]/10**16,
+#         label='O$^+$ O$_2$ Luna et al., 2005', c='green')
+#
+#ax2.axvline(particleE_range_TP1[0]/1000, color='red', linestyle='--',
+#            label='TP1-TP2-TP3')
+#ax2.axvline(particleE_range_TP2[0]/1000, color='red', linestyle='--')
+#ax2.axvline(particleE_range_TP3[0]/1000, color='red', linestyle='--')
+#ax2.axvline(particleE_range_TP3[1]/1000, color='red', linestyle='--')
+#
+#ax2.axvline(particleE_range_TO2[0]/1000, color='cyan', linestyle='-.',
+#            label='TO2-TO3')
+#ax2.axvline(particleE_range_TO3[0]/1000, color='cyan', linestyle='-.')
+#ax2.axvline(particleE_range_TO3[1]/1000, color='cyan', linestyle='--')
+#
+#plt.title('O$^+$ on O and O$_2$')
+#
+#plt.legend()
+#
+#ax2.set_xlim(10**0, 3*10**4)
+#ax2.set_ylim(10**-24, 10**-14)
+#
+#ax2.set_xscale("log")
+#ax2.set_yscale("log")
+#
+#plt.xlabel('Energy [keV]')
+#plt.ylabel('')
+#
+#'''Save figure'''
+#figNr = 'compare_cross_sections_all'
+#fig.savefig(figDir+'Figure_'+figNr+'.svg')
+#fig.savefig(figDir+'Figure_'+figNr+'.png')
+#fig.savefig(figDir+'Figure_'+figNr+'.pdf')
+
+
+#'''---------------h2o - figure for thesis'''
+#popt_sigma, pcov_sigma = curve_fit(math_tools.linear_function,
+#                                   Hplus_H2O_gobet[1:, 0],
+#                                   np.log10(Hplus_H2O_gobet[1:, 1]/10**16),
+#                                   init)
+#
+#E_range_2 = np.arange(1, 10**3)
+#fit4 = math_tools.linear_function(E_range_2, popt_sigma[0], popt_sigma[1])
+#
+#fig = plt.figure(figsize=(10, 5))
+#
+#ax1 = fig.add_subplot(1, 2, 1)
+#
+#plt.plot(Hplus_H2O_gobet[:, 0], Hplus_H2O_gobet[:, 1]/10**16,
+#         label='H$^+$ H$_2$O Gobet et al., 2001')
+#
+#plt.plot(Hplus_H2O_luna[:, 0], Hplus_H2O_luna[:, 1]/10**18,
+#         label='H$^+$ H$_2$O Luna et al., 2007')
+#
+##plt.plot(Hplus_H2O_berkner[:, 0], Hplus_H2O_berkner[:, 1]/10**16,
+#         #label='H$^+$ H$_2$O berkner')
+##plt.plot(Hplus_H2O_chambers[:, 0], Hplus_H2O_chambers[:, 1]/10**16,
+#         #label='H$^+$ H$_2$O chambers')
+#plt.plot(Hplus_H2O_dagnac[:, 0], Hplus_H2O_dagnac[:, 1]/10**16,
+#         label='H$^+$ H$_2$O Dagnac et al., 1970')
+#
+#plt.plot(Hplus_O2[:, 0], Hplus_O2[:, 1]/10**16,
+#         label='H$^+$ O$_2$ Basu et al., 1987', c='blue')
+#
+##plt.plot(E_range_2, 10**fit4, label='fit', linestyle='--')
+#
+#ax1.axvline(particleE_range_TP1[0]/1000, color='red', linestyle='--',
+#           label='TP1-TP2-TP3')
+#ax1.axvline(particleE_range_TP2[0]/1000, color='red', linestyle='--')
+#ax1.axvline(particleE_range_TP3[0]/1000, color='red', linestyle='--')
+#ax1.axvline(particleE_range_TP3[1]/1000, color='red', linestyle='--')
+#
+##ax1.axvline(particleE_range_TO2[0]/1000, color='cyan', linestyle='-.',
+##           label='TO2-TO3')
+##ax1.axvline(particleE_range_TO3[0]/1000, color='cyan', linestyle='-.')
+##ax1.axvline(particleE_range_TO3[1]/1000, color='cyan', linestyle='--')
+#
+#plt.legend()
+#
+#ax1.set_xlim(10**0, 3*10**4)
+#ax1.set_ylim(10**-24, 10**-14)
+#
+#ax1.set_xscale("log")
+#ax1.set_yscale("log")
+#
+#plt.xlabel('Energy [keV]')
+#plt.ylabel(' Cross section [cm$^2$]')
+#
+#ax2 = fig.add_subplot(1, 2, 2)
+#
+#plt.plot(Hplus_O2[:, 0], Hplus_O2[:, 1]/10**16,
+#         label='H$^+$ O$_2$ Basu et al., 1987', c='blue')
+#plt.plot(E_range, 10**fit_Hplus_O2, label='H$^+$ O$_2$ fit', c='blue',
+#         linestyle='--')
+#
+#plt.plot(Hplus_H2O_gobet[:, 0], Hplus_H2O_gobet[:, 1]/10**16,
+#         label='H$^+$ H$_2$O Gobet et al., 2001')
+#
+##plt.plot(Hplus_H2O_luna[:, 0], Hplus_H2O_luna[:, 1]/10**18,
+##         label='H$^+$ H$_2$O Luna et al., 2007')
+##
+##plt.plot(Hplus_H2O_berkner[:, 0], Hplus_H2O_berkner[:, 1]/10**16,
+##         label='H$^+$ H$_2$O berkner')
+##plt.plot(Hplus_H2O_chambers[:, 0], Hplus_H2O_chambers[:, 1]/10**16,
+##         label='H$^+$ H$_2$O chambers')
+##plt.plot(Hplus_H2O_dagnac[:, 0], Hplus_H2O_dagnac[:, 1]/10**16,
+##         label='H$^+$ H$_2$O dagnac')
+#
+#plt.plot(E_range_2, 10**fit4, label='H$^+$ H$_2$O fit', linestyle='--')
+#
+#ax2.axvline(particleE_range_TP1[0]/1000, color='red', linestyle='--',
+#           label='TP1-TP2-TP3')
+#ax2.axvline(particleE_range_TP2[0]/1000, color='red', linestyle='--')
+#ax2.axvline(particleE_range_TP3[0]/1000, color='red', linestyle='--')
+#ax2.axvline(particleE_range_TP3[1]/1000, color='red', linestyle='--')
+#
+##ax2.axvline(particleE_range_TO2[0]/1000, color='cyan', linestyle='-.',
+##           label='TO2-TO3')
+##ax2.axvline(particleE_range_TO3[0]/1000, color='cyan', linestyle='-.')
+##ax2.axvline(particleE_range_TO3[1]/1000, color='cyan', linestyle='--')
+#
+#plt.legend()
+#
+#ax2.set_xlim(10**0, 3*10**4)
+#ax2.set_ylim(10**-24, 10**-14)
+#
+#ax2.set_xscale("log")
+#ax2.set_yscale("log")
+#
+#plt.xlabel('Energy [keV]')
+##plt.ylabel(' Cross section [cm$^2$]')
+#
+#'''Save figure'''
+#figNr = 'compare_cross_sections_h2o'
+#fig.savefig(figDir+'Figure_'+figNr+'.svg')
+#fig.savefig(figDir+'Figure_'+figNr+'.png')
+#fig.savefig(figDir+'Figure_'+figNr+'.pdf')
+#
+##cross_section_file = 'protons_h2o_berkner.txt'
+##Hplus_H2O_berkner = np.loadtxt(directory + cross_section_file)
+##
+##cross_section_file = 'protons_h2o_chambers.txt'
+##Hplus_H2O_chambers = np.loadtxt(directory + cross_section_file)
+##
+##cross_section_file = 'protons_h2o_dagnac.txt'
+##Hplus_H2O_dagnac = np.loadtxt(directory + cross_section_file)
+
+
+#'''---------------h2o - figure for thesis'''
+#popt_sigma, pcov_sigma = curve_fit(math_tools.linear_function,
+#                                   Hplus_H2O_gobet[1:, 0],
+#                                   np.log10(Hplus_H2O_gobet[1:, 1]/10**16),
+#                                   init)
+#
+#E_range_2 = np.arange(1, 10**3)
+#fit4 = math_tools.linear_function(E_range_2, popt_sigma[0], popt_sigma[1])
+#
+#fig = plt.figure(figsize=(10, 5))
+#
+#ax2 = fig.add_subplot(1, 2, 2)
+#
+##plt.plot(Hplus_O2[:, 0], Hplus_O2[:, 1]/10**16,
+##         label='H$^+$ O$_2$ Basu et al., 1987', c='blue')
+##plt.plot(E_range, 10**fit_Hplus_O2, label='H$^+$ O$_2$ fit', c='blue',
+##         linestyle='--')
+#
+#plt.plot(Hplus_H2O_gobet[:, 0], Hplus_H2O_gobet[:, 1]/10**16,
+#         label='H$^+$ H$_2$O Gobet et al., 2001')
+#
+#plt.plot(E_range_2, 10**fit4, label='H$^+$ H$_2$O fit', linestyle='--')
+#
+#ax2.axvline(particleE_range_TP1[0]/1000, color='red', linestyle='--',
+#            label='TP1-TP2-TP3')
+#ax2.axvline(particleE_range_TP2[0]/1000, color='red', linestyle='--')
+#ax2.axvline(particleE_range_TP3[0]/1000, color='red', linestyle='--')
+#ax2.axvline(particleE_range_TP3[1]/1000, color='red', linestyle='--')
+#
+#plt.legend()
+#
+#ax2.set_xlim(10**0, 3*10**4)
+#ax2.set_ylim(10**-24, 10**-14)
+#
+#ax2.set_xscale("log")
+#ax2.set_yscale("log")
+#
+#plt.xlabel('Energy [keV]')
+#
+#'''Save figure'''
+#figNr = 'compare_cross_sections_h2o_defense'
+#fig.savefig(figDir+'Figure_'+figNr+'.svg')
+#fig.savefig(figDir+'Figure_'+figNr+'.png')
+#fig.savefig(figDir+'Figure_'+figNr+'.pdf')
+#
+#
+#'''---------------final selection - figure presentation'''
+#
+#fig = plt.figure(figsize=(6, 5))
+#ax = fig.gca()
+#
+#plt.plot(Hplus_O2[:, 0], Hplus_O2[:, 1]/10**16,
+#         label='H$^+$ O$_2$ Basu et al., 1987', c='blue')
+#plt.plot(E_range, 10**fit_Hplus_O2, label='H$^+$ O$_2$ fit', c='blue',
+#         linestyle='--')
+#
+##plt.plot(Oplus_O_lo[:, 0], Oplus_O_lo[:, 1]/10**16,
+##         label='O$^+$ O Lo et al., 1971', c='orange')
+##plt.plot(E_range_3, fit_lo_lin, label='O$^+$ O fit', c='orange',
+##         linestyle='-.')
+#
+#ax.axvline(particleE_range_TP1[0]/1000, color='red', linestyle='--',
+#           label='Proton channels')
+#ax.axvline(particleE_range_TP2[0]/1000, color='red', linestyle='--')
+#ax.axvline(particleE_range_TP3[0]/1000, color='red', linestyle='--')
+#ax.axvline(particleE_range_TP3[1]/1000, color='red', linestyle='--')
+#
+##ax.axvline(particleE_range_TO2[0]/1000, color='cyan', linestyle='-.', 
+##           label='TO2-TO3')
+##ax.axvline(particleE_range_TO3[0]/1000, color='cyan', linestyle='-.')
+##ax.axvline(particleE_range_TO3[1]/1000, color='cyan', linestyle='--')
+#
+#plt.legend()
+#
+#ax.set_xlim(10**0, 3*10**4)
+#ax.set_ylim(10**-24, 10**-14)
+#
+#ax.set_xscale("log")
+#ax.set_yscale("log")
+#
+#plt.xlabel('Energy [keV]')
+#plt.ylabel(' Cross section [cm$^2$]')
+#
+#'''Save figure'''
+#figNr = 'cross_sections_presenation'
+#fig.savefig(figDir+'Figure_'+figNr+'.svg')
+#fig.savefig(figDir+'Figure_'+figNr+'.png')
+#fig.savefig(figDir+'Figure_'+figNr+'.pdf')
+
+
+#'''--------------figure for Johnson---------------'''
+#
+#fig = plt.figure(figsize=(15, 15))
+#
+#ax1 = fig.gca()
+#
+#
+#def pEtoV(E_range, qe, mParticle):
+#
+#    return np.sqrt(E_range*qe/(0.5*mParticle))
+#
+#
+#u = 1.660538921*10**(-27)  # unified atomic mass unit, kg
+#qe = 1.602176565*10**-19  # charge of an electron in Coulomb
+#mProton = 1*u  # mass of one proton, kg
+#mOplus = 15.99*u
+#
+#print(np.shape(E_range))
+#print(np.shape(pEtoV(E_range, qe, mProton)))
+#
+#plt.plot(pEtoV(E_range, qe, mProton), 10**fit_Hplus_O2,
+#         label='H$^+$ O$_2$ fit', c='blue',
+#         linestyle='--')
+#
+#plt.plot(pEtoV(Hplus_O2[:, 0], qe, mProton), Hplus_O2[:, 1]/10**16,
+#         label='H$^+$ O$_2$ Basu et al., 1987', c='blue')
+#
+#plt.plot(pEtoV(Hplus_O_basu[:, 0], qe, mProton), Hplus_O_basu[:, 1]/10**16,
+#         label='H$^+$ O Basu et al., 1987', c='pink')
+#
+#plt.plot(pEtoV(Hplus_O_stier[:, 0], qe, mProton), Hplus_O_stier[:, 1]/10**16,
+#         label='H$^+$ O Stier and Barnett, 1956', c='brown')
+#
+#plt.plot(pEtoV(Hplus_O_thompson[:, 0], qe, mProton),
+#         Hplus_O_thompson[:, 1]/10**16,
+#         label='H$^+$ O Thompson et al., 1996', c='grey')
+#
+#ax1.axvline(pEtoV(particleE_range_TP1[0]/1000, qe, mProton), color='red',
+#            linestyle='--',
+#            label='TP1-TP2-TP3')
+#ax1.axvline(pEtoV(particleE_range_TP2[0]/1000, qe, mProton), color='red',
+#            linestyle='--')
+#ax1.axvline(pEtoV(particleE_range_TP3[0]/1000, qe, mProton), color='red',
+#            linestyle='--')
+#ax1.axvline(pEtoV(particleE_range_TP3[1]/1000, qe, mProton), color='red',
+#            linestyle='--')
+#
+#
+#plt.plot(pEtoV(Oplus_O_lo[:, 0], qe, mOplus), Oplus_O_lo[:, 1]/10**16,
+#         label='O$^+$ O Lo et al., 1971', c='orange')
+#
+#plt.plot(pEtoV(Oplus_O_jorgensen[:, 0], qe, mOplus),
+#         Oplus_O_jorgensen[:, 1]/10**16,
+#         label='O$^+$ O Jorgensen et al., 1965', c='magenta')
+#
+#plt.plot(pEtoV(Oplus_O2_luna[:, 0], qe, mOplus), Oplus_O2_luna[:, 1]/10**16,
+#         label='O$^+$ O$_2$ Luna et al., 2005', c='green')
+#
+#ax1.axvline(pEtoV(particleE_range_TO2[0]/1000, qe, mOplus), color='cyan',
+#            linestyle='-.',
+#            label='TO2-TO3')
+#ax1.axvline(pEtoV(particleE_range_TO3[0]/1000, qe, mOplus), color='cyan',
+#            linestyle='-.')
+#ax1.axvline(pEtoV(particleE_range_TO3[1]/1000, qe, mOplus), color='cyan',
+#            linestyle='--')
+#
+#plt.plot(pEtoV(E_range_3, qe, mOplus), fit_lo_lin, label='O$^+$ O fit',
+#         c='orange',
+#         linestyle='-.')
+#
+#plt.title('Protons on O and O$_2$')
+#
+#plt.legend()
+#
+#ax1.set_xlim(10**4, 5*10**5)
+#ax1.set_ylim(10**-18, 10**-14)
+#
+#ax1.set_xscale("log")
+#ax1.set_yscale("log")
+#
+#plt.xlabel('speed [m/s]')
+#plt.ylabel(' Cross section [cm$^2$]')
+#
+#'''Save figure'''
+#figNr = 'compare_cross_sections_johnson'
+#fig.savefig(figDir+'Figure_'+figNr+'.svg')
+#fig.savefig(figDir+'Figure_'+figNr+'.png')
+#fig.savefig(figDir+'Figure_'+figNr+'.pdf')
+
+'''---------------figure for E26 paper'''
+particleE_range_TP1 = np.array([115000, 244000])  # TP1
+
+fig = plt.figure(figsize=(8, 7))
+ax = fig.gca()
+
+plt.plot(Hplus_O2[:, 0], Hplus_O2[:, 1]/10**16,
+         label='H$^+$ O$_2$ Basu et al., 1987', c='blue')
+plt.plot(E_range, 10**fit_Hplus_O2, label='H$^+$ O$_2$ fit', c='blue',
+         linestyle='--')
+
+ax.axvline(particleE_range_TP1[0]/1000, color='red', linestyle='--',
+           label='TP1-TP2-TP3')
+ax.axvline(particleE_range_TP2[0]/1000, color='red', linestyle='--')
+ax.axvline(particleE_range_TP3[0]/1000, color='red', linestyle='--')
+ax.axvline(particleE_range_TP3[1]/1000, color='red', linestyle='--')
+
+ax.text(particleE_range_TP1[0]/1000, 1.5*10**-14, 'TP1', size='x-large')
+ax.text(particleE_range_TP2[0]/1000, 1.5*10**-14, ' TP2', size='x-large')
+ax.text(particleE_range_TP3[0]/1000, 1.5*10**-14, 'TP3', size='x-large')
+
+plt.legend(fontsize='x-large')
+
+ax.set_xlim(10**0, 3*10**4)
+ax.set_ylim(10**-24, 10**-14)
+
+ax.set_xscale("log")
+ax.set_yscale("log")
+
+plt.xlabel('Energy [keV]', size='x-large')
+plt.ylabel(' Cross section [cm$^2$]', size='x-large')
+
+plt.xticks(fontsize='x-large')
+plt.yticks(fontsize='x-large')
+
+
+'''Save figure'''
+figNr = 'cross_section_e26_paper'
+fig.savefig(figDir+'Figure_'+figNr+'.svg')
+fig.savefig(figDir+'Figure_'+figNr+'.png')
+fig.savefig(figDir+'Figure_'+figNr+'.pdf')
+
+
+'''---------------figure for alfven wing paper'''
+particleE_range_TP1 = np.array([115000, 244000])  # TP1
+
+fig = plt.figure(figsize=(8, 7))
+ax = fig.gca()
+
+plt.plot(Hplus_O2[:, 0], Hplus_O2[:, 1]/10**16,
+         label='H$^+$ O$_2$ Basu et al., 1987', c='blue')
+plt.plot(E_range, 10**fit_Hplus_O2, label='H$^+$ O$_2$ fit', c='blue',
+         linestyle='--')
+
+ax.axvline(particleE_range_TP1[0]/1000, color='red', linestyle='--',
+           label='TP1-TP2')
+ax.axvline(particleE_range_TP2[0]/1000, color='red', linestyle='--')
+ax.axvline(particleE_range_TP3[0]/1000, color='red', linestyle='--')
+#ax.axvline(particleE_range_TP3[1]/1000, color='red', linestyle='--')
+
+ax.text(particleE_range_TP1[0]/1000, 1.5*10**-14, 'TP1', size='x-large')
+ax.text(particleE_range_TP2[0]/1000, 1.5*10**-14, ' TP2', size='x-large')
+#ax.text(particleE_range_TP3[0]/1000, 1.5*10**-14, 'TP3', size='x-large')
+
+plt.legend(fontsize='x-large')
+
+ax.set_xlim(10**0, 3*10**4)
+ax.set_ylim(10**-24, 10**-14)
+
+ax.set_xscale("log")
+ax.set_yscale("log")
+
+plt.xlabel('Energy [keV]', size='x-large')
+plt.ylabel(' Cross section [cm$^2$]', size='x-large')
+
+plt.xticks(fontsize='x-large')
+plt.yticks(fontsize='x-large')
+
+
+'''Save figure'''
+figNr = 'cross_section_alfven_paper'
+fig.savefig(figDir+'Figure_'+figNr+'.svg')
+fig.savefig(figDir+'Figure_'+figNr+'.png')
+fig.savefig(figDir+'Figure_'+figNr+'.pdf')
