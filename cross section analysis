@@ -560,6 +560,13 @@ ax.axvline(particleE_range_TP2[0]/1000, color='red', linestyle='--')
 ax.axvline(particleE_range_TP3[0]/1000, color='red', linestyle='--')
 ax.axvline(particleE_range_TP3[1]/1000, color='red', linestyle='--')
 
+ax.axhline(21.24e-8, color='red', linestyle='-.', label='Ice Range Start')
+ax.axhline(27.15e-8, color='red', linestyle='-.', label='Ice Range Finish')
+ax.axhline(20.91-8, color='red', linestyle='-.', label='Water Range Start')
+ax.axhline(26.79-8, color='red', linestyle='-.', label='Water Range Finish')
+ax.axhline(65.90-8, color='red', linestyle='-.', label='Snow Range Start')
+ax.axhline(83.87-8, color='red', linestyle='-.', label='Snow Range Finish')
+
 ax.text(particleE_range_TP1[0]/1000, 1.5*10**-14, 'TP1', size='x-large')
 ax.text(particleE_range_TP2[0]/1000, 1.5*10**-14, ' TP2', size='x-large')
 ax.text(particleE_range_TP3[0]/1000, 1.5*10**-14, 'TP3', size='x-large')
