@@ -84,7 +84,7 @@ for i in range(0, len(ndensityC)):
             RC.append(r)
             csa = 4*3.14*(r**2)
             CSAC.append(csa)
-            mfp = 1/(ndensityE[i]*csa)
+            mfp = 1/(ndensityC[i]*csa)
             MFPC.append(mfp)
 
 RC = np.array(RC)
@@ -93,6 +93,7 @@ MFPC = np.array(MFPC)
 ndensityC = np.array(ndensityC)
 
 print('Callisto data')
+print('Radius', RC)
 print('Cross Section area of dust:', CSAC)
 print('Mean Free Path', MFPC)
 
