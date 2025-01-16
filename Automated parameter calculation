@@ -5,36 +5,48 @@ Created on Thu Jan 16 11:04:47 2025
 @author: march
 """
 
-import math_tools as math_tools
-
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
-from scipy.optimize import curve_fit
-from scipy import stats    
 
-dataset=np.loadtxt('prova automazione.csv', delimiter=',').T
+# Load dataset
+dataset = np.loadtxt('prova automazione.csv', delimiter=',').T
 
 mass = dataset[0]
 density = dataset[1]
 ndensity = dataset[2]
+
+# Initialize empty lists for results
 R = []
 CSA = []
 MFP = []
 
-for i in range(0, len(ndensity)):
-    for j in range(0, len(mass)):
-        for k in range(0, len(density)):
-            r = ((3*mass[j])/(4*3.14*density[k]))**(1/3)
-            R.append(r)
-            csa = 4*3.14*(r**2)
-            CSA.append(csa)
-            mfp = 1/(ndensity[i]*csa)
-            MFP.append(mfp)
+# Loop over each mass value
+for m in mass:
+    # Calculate R and CSA for the current mass and all densities
+    r = ((3 * m) / (4 * np.pi * density)) ** (1 / 3)
+    csa = 4 * np.pi * (r ** 2)
 
-R = np.array(R)
-CSA = np.array(CSA)
-MFP = np.array(MFP)
-print(R)
-print(CSA)
-print(MFP)
+    # Filter out invalid R and CSA values (e.g., where density is zero or produces inf/NaN)
+    valid_mask = np.isfinite(r) & np.isfinite(csa) & (r > 0) & (csa > 0)
+    r = r[valid_mask]
+    csa = csa[valid_mask]
+
+    # Append R and CSA results
+    R.append(r)
+    CSA.append(csa)
+
+    # Calculate MFP for all valid CSA values and all ndensity values
+    if len(csa) > 0:  # Check if there are valid CSA values to avoid empty arrays
+        mfp = 1 / (ndensity[:, None] * csa)  # Broadcasting ndensity over csa
+        # Filter out invalid MFP values
+        mfp = mfp[np.isfinite(mfp) & (mfp > 0)]
+        MFP.append(mfp)
+
+# Convert results to NumPy arrays
+R = np.array([val for sublist in R for val in sublist])  # Flatten nested lists
+CSA = np.array([val for sublist in CSA for val in sublist])  # Flatten nested lists
+MFP = np.array([val for sublist in MFP for val in sublist])  # Flatten nested lists
+
+# Print results
+print("R (Radius):", R)
+print("CSA (Cross-sectional Area):", CSA)
+print("MFP (Mean Free Path):", MFP)
