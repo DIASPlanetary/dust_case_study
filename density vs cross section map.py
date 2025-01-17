@@ -17,6 +17,7 @@ datasetE = np.loadtxt('Europa_data.csv', delimiter=',').T
 datasetI = np.loadtxt('Io_data.csv', delimiter=',').T
 datasetC = np.loadtxt('Callisto_data.csv', delimiter=',').T
 datasetIP = np.loadtxt('Io_pele_data.csv', delimiter=',').T
+datasetES = np.loadtxt('Europa_second_data.csv', delimiter=',').T
 
 massE = datasetE[0]
 densityE = datasetE[1]
@@ -45,6 +46,28 @@ ndensityC = datasetC[2]
 RC = []
 CSAC = []
 MFPC = []
+
+RES = datasetES[0]
+ndensityES = datasetES[1]
+CSAES = []
+MFPES = []
+
+for i in range(0, len(ndensityES)):
+    for j in range(0, len(RES)):
+        csa =4*3.14*(RES[j]**2)
+        CSAES.append(csa)
+        mfp = 1/(ndensityES[i]*csa)
+        MFPES.append(mfp)
+
+RES = np.array(RES)
+CSAES = np.array(CSAES)
+MFPES = np.array(MFPES)
+ndensityES = np.array(ndensityES)
+
+print('Europa second data')
+print('Cross Section area of dust:', CSAES)
+print('Mean Free Path', MFPES)
+
 
 for i in range(0, len(ndensityE)):
     for j in range(0, len(massE)):
@@ -124,11 +147,13 @@ print('Radius', RC)
 print('Cross Section area of dust:', CSAC)
 print('Mean Free Path', MFPC)
 
-X_E = CSAE 
+X_E = CSAE
+X_ES = CSAES
 X_I = CSAI
 X_IP = CSAIP
 X_C = CSAC
 Y_E = []
+Y_ES = []
 Y_I = []
 Y_IP = []
 Y_C = []
@@ -139,6 +164,31 @@ for m in range(9, 18):
     Y_E.append(ndensityE[1])
 for m in range(18, 27):
     Y_E.append(ndensityE[2])
+
+for m in range(0, 12):
+    Y_ES.append(ndensityES[0])
+for m in range(12, 24):
+    Y_ES.append(ndensityES[1])
+for m in range(24, 36):
+    Y_ES.append(ndensityES[2])
+for m in range(36, 48):
+    Y_ES.append(ndensityES[3])
+for m in range(48, 60):
+    Y_ES.append(ndensityES[4])
+for m in range(60, 72):
+    Y_ES.append(ndensityES[5])
+for m in range(72, 84):
+    Y_ES.append(ndensityES[6])
+for m in range(84, 96):
+    Y_ES.append(ndensityES[7])
+for m in range(96, 108):
+    Y_ES.append(ndensityES[8])
+for m in range(108, 120):
+    Y_ES.append(ndensityES[9])
+for m in range(120, 132):
+    Y_ES.append(ndensityES[10])
+for m in range(132, 144):
+    Y_ES.append(ndensityES[11])
 
 for m in range(0, 4):
     Y_I.append(ndensityI[0])
@@ -174,6 +224,7 @@ ax.scatter(X_E, Y_E, label='Europa Kruger et al., 2003', marker='.', color='b')
 ax.scatter(X_I, Y_I, label='Io Kruger et al., 2003', marker='.', color='y')
 ax.scatter(X_C, Y_C, label='Callisto Kruger et al., 2003', marker='.', color='r')
 ax.scatter(X_IP, Y_IP, label='Io McDoniel et al., 2015', marker='s', color='y')
+ax.scatter(X_ES, Y_ES, label='Europa Southworth et al., 2015', marker='^', color='b')
 
 ax.set_xlim(1e-12, 1e-10)
 #ax.set_ylim(1e-9, 0.0012)
