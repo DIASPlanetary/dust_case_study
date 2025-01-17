@@ -125,9 +125,9 @@ for m in range(18, 27):
     
 
 fig, ax = plt.subplots()
-ax.scatter(X_E, Y_E, label='Europa data', marker='s', color='b')
-ax.scatter(X_I, Y_I, label='Io data', marker='.', color='y')
-ax.scatter(X_C, Y_C, label='Callisto data', marker='^', color='r')
+ax.scatter(X_E, Y_E, label='Europa Kruger et al., 2003', marker='s', color='b')
+ax.scatter(X_I, Y_I, label='Io Kruger et al., 2003', marker='.', color='y')
+ax.scatter(X_C, Y_C, label='Callisto Kruger et al., 2003', marker='^', color='r')
 
 ax.set_xlim(1e-12, 1e-10)
 ax.set_ylim(1e-9, 0.0012)
