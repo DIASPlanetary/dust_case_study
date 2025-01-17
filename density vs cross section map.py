@@ -16,6 +16,7 @@ from scipy import stats
 datasetE = np.loadtxt('Europa_data.csv', delimiter=',').T
 datasetI = np.loadtxt('Io_data.csv', delimiter=',').T
 datasetC = np.loadtxt('Callisto_data.csv', delimiter=',').T
+datasetIP = np.loadtxt('Io_pele_data.csv', delimiter=',').T
 
 massE = datasetE[0]
 densityE = datasetE[1]
@@ -30,6 +31,13 @@ ndensityI = datasetI[2]
 RI = []
 CSAI = []
 MFPI = []
+
+massIP = datasetIP[0]
+densityIP = datasetIP[1]
+ndensityIP = datasetIP[2]
+RIP = []
+CSAIP = []
+MFPIP = []
 
 massC = datasetC[0]
 densityC = datasetC[1]
@@ -65,7 +73,7 @@ for i in range(0, len(ndensityI)):
             RI.append(r)
             csa = 4*3.14*(r**2)
             CSAI.append(csa)
-            mfp = 1/(ndensityE[i]*csa)
+            mfp = 1/(ndensityI[i]*csa)
             MFPI.append(mfp)
 
 RI = np.array(RI)
@@ -76,6 +84,25 @@ ndensityI = np.array(ndensityI)
 print('Io data')
 print('Cross Section area of dust:', CSAI)
 print('Mean Free Path', MFPI)
+
+for i in range(0, len(ndensityIP)):
+    for j in range(0, len(massIP)):
+        for k in range(0, len(densityIP)):
+            r = ((3*massIP[j])/(4*3.14*densityIP[k]))**(1/3)
+            RIP.append(r)
+            csa = 4*3.14*(r**2)
+            CSAIP.append(csa)
+            mfp = 1/(ndensityIP[i]*csa)
+            MFPIP.append(mfp)
+
+RIP = np.array(RIP)
+CSAIP = np.array(CSAIP)
+MFPIP = np.array(MFPIP)
+ndensityIP = np.array(ndensityIP)
+
+print('Io pele data')
+print('Cross Section area of dust:', CSAIP)
+print('Mean Free Path', MFPIP)
 
 for i in range(0, len(ndensityC)):
     for j in range(0, len(massC)):
@@ -99,9 +126,11 @@ print('Mean Free Path', MFPC)
 
 X_E = CSAE 
 X_I = CSAI
+X_IP = CSAIP
 X_C = CSAC
 Y_E = []
 Y_I = []
+Y_IP = []
 Y_C = []
 
 for m in range(0, 9):
@@ -116,6 +145,22 @@ for m in range(0, 4):
 for m in range(4, 8):
     Y_I.append(ndensityI[1])
 
+for m in range(0, 49):
+    Y_IP.append(ndensityIP[0])
+for m in range(49, 98):
+    Y_IP.append(ndensityIP[1])
+for m in range(98, 147):
+    Y_IP.append(ndensityIP[2])
+for m in range(147, 196):
+    Y_IP.append(ndensityIP[3])
+for m in range(196, 243):
+    Y_IP.append(ndensityIP[4])
+for m in range(243, 292):
+    Y_IP.append(ndensityIP[5])
+for m in range(292, 343):
+    Y_IP.append(ndensityIP[6])
+
+
 for m in range(0, 9):
     Y_C.append(ndensityC[0])
 for m in range(9, 18):
@@ -125,12 +170,13 @@ for m in range(18, 27):
     
 
 fig, ax = plt.subplots()
-ax.scatter(X_E, Y_E, label='Europa Kruger et al., 2003', marker='s', color='b')
+ax.scatter(X_E, Y_E, label='Europa Kruger et al., 2003', marker='.', color='b')
 ax.scatter(X_I, Y_I, label='Io Kruger et al., 2003', marker='.', color='y')
-ax.scatter(X_C, Y_C, label='Callisto Kruger et al., 2003', marker='^', color='r')
+ax.scatter(X_C, Y_C, label='Callisto Kruger et al., 2003', marker='.', color='r')
+ax.scatter(X_IP, Y_IP, label='Io McDoniel et al., 2015', marker='s', color='y')
 
 ax.set_xlim(1e-12, 1e-10)
-ax.set_ylim(1e-9, 0.0012)
+#ax.set_ylim(1e-9, 0.0012)
 
 plt.xlabel("Cross-section area (cm^2)")    
 plt.ylabel("Number density (m^-3")   
