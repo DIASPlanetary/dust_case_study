@@ -226,11 +226,11 @@ ax.scatter(X_C, Y_C, label='Callisto Kruger et al., 2003', marker='.', color='r'
 ax.scatter(X_IP, Y_IP, label='Io McDoniel et al., 2015', marker='s', color='y')
 ax.scatter(X_ES, Y_ES, label='Europa Southworth et al., 2015', marker='^', color='b')
 
-ax.set_xlim(1e-12, 1e-10)
-#ax.set_ylim(1e-9, 0.0012)
+ax.set_yscale('log')
+ax.set_xscale('log')
 
-plt.xlabel("Cross-section area (cm^2)")    
-plt.ylabel("Number density (m^-3")   
+plt.xlabel("Cross-section area (m^2)")    
+plt.ylabel("Number density (m^-3)")   
 
 
-plt.legend()
+plt.legend(loc='lower right', fontsize="10")
