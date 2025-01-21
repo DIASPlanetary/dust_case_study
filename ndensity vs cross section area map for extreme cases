@@ -1,0 +1,240 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jan 21 10:03:21 2025
+
+@author: march
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
+from scipy.optimize import curve_fit
+from scipy import stats    
+
+datasetEuK = np.loadtxt('Europa_kruger_extremes.csv', delimiter=',').T
+datasetIK = np.loadtxt('Io_kruger_extremes.csv', delimiter=',').T
+datasetCK = np.loadtxt('Callisto_kruger_extremes.csv', delimiter=',').T
+datasetIM = np.loadtxt('Io_mcdoniel_extremes.csv', delimiter=',').T
+datasetEuS = np.loadtxt('Europa_south_extremes.csv', delimiter=',').T
+datasetEnM = np.loadtxt('Enceladus_meier_extremes.csv', delimiter=',').T
+datasetIA = np.loadtxt('Io_adeloye_extremes.csv', delimiter=',').T
+
+REuK = datasetEuK[0]
+ndensityEuK = datasetEuK[1]
+CSAEuK = []
+MFPEuK = []
+
+RIK = datasetIK[0]
+ndensityIK = datasetIK[1]
+CSAIK = []
+MFPIK = []
+
+RCK = datasetCK[0]
+ndensityCK = datasetCK[1]
+CSACK = []
+MFPCK = []
+
+RIM = datasetIM[0]
+ndensityIM = datasetIM[1]
+CSAIM = []
+MFPIM = []
+
+REuS = datasetEuS[0]
+ndensityEuS = datasetEuS[1]
+CSAEuS = []
+MFPEuS = []
+
+REnM = datasetEnM[0]
+ndensityEnM = datasetEnM[1]
+CSAEnM = []
+MFPEnM = []
+
+RIA = datasetIA[0]
+ndensityIA = datasetIA[1]
+CSAIA = []
+MFPIA = []
+
+for i in range(0, len(ndensityEuK)):
+    for j in range(0, len(REuK)):
+        csa =4*3.14*(REuK[j]**2)
+        CSAEuK.append(csa)
+        mfp = 1/(ndensityEuK[i]*csa)
+        MFPEuK.append(mfp)
+
+REuK = np.array(REuK)
+CSAEuK = np.array(CSAEuK)
+MFPEuK = np.array(MFPEuK)
+ndensityEuK = np.array(ndensityEuK)
+
+print('Europa Kruger data:')
+print('Cross Section area of dust:', CSAEuK)
+print('Mean Free Path', MFPEuK)
+
+for i in range(0, len(ndensityIK)):
+    for j in range(0, len(RIK)):
+        csa =4*3.14*(RIK[j]**2)
+        CSAIK.append(csa)
+        mfp = 1/(ndensityIK[i]*csa)
+        MFPIK.append(mfp)
+
+RIK = np.array(RIK)
+CSAIK = np.array(CSAIK)
+MFPIK = np.array(MFPIK)
+ndensityIK = np.array(ndensityIK)
+
+print('Io Kruger data:')
+print('Cross Section area of dust:', CSAIK)
+print('Mean Free Path', MFPIK)
+
+for i in range(0, len(ndensityCK)):
+    for j in range(0, len(RCK)):
+        csa =4*3.14*(RCK[j]**2)
+        CSACK.append(csa)
+        mfp = 1/(ndensityCK[i]*csa)
+        MFPCK.append(mfp)
+
+RCK = np.array(RCK)
+CSACK = np.array(CSACK)
+MFPCK = np.array(MFPCK)
+ndensitCK = np.array(ndensityCK)
+
+print('Callisto Kruger data:')
+print('Cross Section area of dust:', CSACK)
+print('Mean Free Path', MFPCK)
+
+for i in range(0, len(ndensityIM)):
+    for j in range(0, len(RIM)):
+        csa =4*3.14*(RIM[j]**2)
+        CSAIM.append(csa)
+        mfp = 1/(ndensityIM[i]*csa)
+        MFPIM.append(mfp)
+
+RIM = np.array(RIM)
+CSAIM = np.array(CSAIM)
+MFPIM = np.array(MFPIM)
+ndensityIM = np.array(ndensityIM)
+
+print('Io Mcdoniel data:')
+print('Cross Section area of dust:', CSAIM)
+print('Mean Free Path', MFPIM)
+
+for i in range(0, len(ndensityEuS)):
+    for j in range(0, len(REuS)):
+        csa =4*3.14*(REuS[j]**2)
+        CSAEuS.append(csa)
+        mfp = 1/(ndensityEuS[i]*csa)
+        MFPEuS.append(mfp)
+
+REuS = np.array(REuS)
+CSAEuS = np.array(CSAEuS)
+MFPEuS = np.array(MFPEuS)
+ndensityEuS = np.array(ndensityEuS)
+
+print('Europa Southworth data:')
+print('Cross Section area of dust:', CSAEuS)
+print('Mean Free Path', MFPEuS)
+
+for i in range(0, len(ndensityEnM)):
+    for j in range(0, len(REnM)):
+        csa =4*3.14*(REnM[j]**2)
+        CSAEnM.append(csa)
+        mfp = 1/(ndensityEnM[i]*csa)
+        MFPEnM.append(mfp)
+
+REnM = np.array(REnM)
+CSAEnM = np.array(CSAEnM)
+MFPEnM = np.array(MFPEnM)
+ndensityEnM = np.array(ndensityEnM)
+
+print('Enceladus Meier data:')
+print('Cross Section area of dust:', CSAEnM)
+print('Mean Free Path', MFPEnM)
+
+for i in range(0, len(ndensityIA)):
+    for j in range(0, len(RIA)):
+        csa =4*3.14*(RIA[j]**2)
+        CSAIA.append(csa)
+        mfp = 1/(ndensityIA[i]*csa)
+        MFPIA.append(mfp)
+
+RIA = np.array(RIA)
+CSAIA = np.array(CSAIA)
+MFPIA = np.array(MFPIA)
+ndensityIA = np.array(ndensityIA)
+
+print('Io Adeloye data:')
+print('Cross Section area of dust:', CSAIA)
+print('Mean Free Path', MFPIA)
+
+
+
+X_EuK = CSAEuK
+X_IK = CSAIK
+X_CK = CSACK
+X_IM = CSAIM
+X_EuS = CSAEuS
+X_EnM = CSAEnM
+X_IA = CSAIA
+Y_EuK = []
+Y_IK = []
+Y_CK = []
+Y_IM = []
+Y_EuS = []
+Y_EnM = []
+Y_IA = []
+
+
+for m in range(0, 2):
+    Y_EuK.append(ndensityEuK[0])
+for m in range(2, 4):
+    Y_EuK.append(ndensityEuK[1])
+
+for m in range(0, 2):
+    Y_IK.append(ndensityIK[0])
+for m in range(2, 4):
+    Y_IK.append(ndensityIK[1])
+
+for m in range(0, 2):
+    Y_CK.append(ndensityCK[0])
+for m in range(2, 4):
+    Y_CK.append(ndensityCK[1])
+
+for m in range(0, 2):
+    Y_IM.append(ndensityIM[0])
+for m in range(2, 4):
+    Y_IM.append(ndensityIM[1])
+
+for m in range(0, 2):
+    Y_EuS.append(ndensityEuS[0])
+for m in range(2, 4):
+    Y_EuS.append(ndensityEuS[1])
+
+for m in range(0, 2):
+    Y_EnM.append(ndensityEnM[0])
+for m in range(2, 4):
+    Y_EnM.append(ndensityEnM[1])
+
+for m in range(0, 2):
+    Y_IA.append(ndensityIA[0])
+for m in range(2, 4):
+    Y_IA.append(ndensityIA[1])
+
+
+
+fig, ax = plt.subplots()
+ax.scatter(X_EuK, Y_EuK, label='Europa Kruger et al., 2003', marker='.', color='b')
+ax.scatter(X_IK, Y_IK, label='Io Kruger et al., 2003', marker='.', color='y')
+ax.scatter(X_CK, Y_CK, label='Callisto Kruger et al., 2003', marker='.', color='r')
+ax.scatter(X_IM, Y_IM, label='Io McDoniel et al., 2015', marker='s', color='y')
+ax.scatter(X_EuS, Y_EuS, label='Europa Southworth et al., 2015', marker='^', color='b')
+ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015', marker='D', color='g')
+ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025', marker='x', color='y')
+
+ax.set_yscale('log')
+ax.set_xscale('log')
+
+plt.xlabel("Cross-section area (m^2)")    
+plt.ylabel("Number density (m^-3)")   
+
+
+#plt.legend(loc='lower left', fontsize="10")
