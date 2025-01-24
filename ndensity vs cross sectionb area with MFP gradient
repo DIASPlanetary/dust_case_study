@@ -272,6 +272,7 @@ all_CSA = np.array(all_CSA)
 all_ndensity = np.array(all_ndensity)
 all_MFP = np.array(all_MFP)
 
+# Define a grid for the background
 x = np.log10(all_CSA)  # Log scale for cross-sectional area
 y = np.log10(all_ndensity)  # Log scale for number density
 z = np.log10(all_MFP)  # Log scale for mean free path
@@ -284,7 +285,7 @@ x = x[mask]
 y = y[mask]
 z = z[mask]
 
-# Define grid resolution
+# Define grid resolution and extend the grid limits
 xi = np.linspace(min(x), max(x), 300)
 yi = np.linspace(min(y), max(y), 300)
 
@@ -292,10 +293,14 @@ yi = np.linspace(min(y), max(y), 300)
 xi_mesh, yi_mesh = np.meshgrid(xi, yi)
 
 # Interpolate the MFP values onto the grid
+# Use 'nearest' to fill areas outside data points
 zi = griddata((x, y), z, (xi_mesh, yi_mesh), method='linear')
 
-# Mask out areas where interpolation is not possible
-zi = np.ma.masked_invalid(zi)
+# Fill missing values outside the convex hull using 'nearest'
+zi_nearest = griddata((x, y), z, (xi_mesh, yi_mesh), method='nearest')
+
+# Combine 'linear' and 'nearest' results to cover the full range
+zi = np.where(np.isnan(zi), zi_nearest, zi)
 
 # Plot the background gradient
 fig, ax = plt.subplots()
@@ -324,5 +329,3 @@ plt.legend()
 
 # Show the plot
 plt.show()
-cbar = plt.colorbar(scatter, ax=ax)
-cbar.set_label("Mean Free Path (m)")
