@@ -7,6 +7,7 @@ Created on Tue Jan 21 10:03:21 2025
 
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.interpolate import griddata
 from matplotlib.colors import LogNorm
 from scipy.optimize import curve_fit
 from scipy import stats    
@@ -271,13 +272,39 @@ all_CSA = np.array(all_CSA)
 all_ndensity = np.array(all_ndensity)
 all_MFP = np.array(all_MFP)
 
-# Create the scatter plot
-fig, ax = plt.subplots()
+x = np.log10(all_CSA)  # Log scale for cross-sectional area
+y = np.log10(all_ndensity)  # Log scale for number density
+z = np.log10(all_MFP)  # Log scale for mean free path
 
-# Plot with a single color gradient based on the combined MFP values
-scatter = ax.scatter(
-    all_CSA, all_ndensity, c=np.log(all_MFP), cmap='viridis', marker='o', edgecolor='k', s=50
+# Mask out invalid values (zero or infinity)
+mask = ~(
+    np.isinf(x) | np.isnan(x) | np.isinf(y) | np.isnan(y) | np.isinf(z) | np.isnan(z)
 )
+x = x[mask]
+y = y[mask]
+z = z[mask]
+
+# Define grid resolution
+xi = np.linspace(min(x), max(x), 300)
+yi = np.linspace(min(y), max(y), 300)
+
+# Create a 2D grid for interpolation
+xi_mesh, yi_mesh = np.meshgrid(xi, yi)
+
+# Interpolate the MFP values onto the grid
+zi = griddata((x, y), z, (xi_mesh, yi_mesh), method='linear')
+
+# Mask out areas where interpolation is not possible
+zi = np.ma.masked_invalid(zi)
+
+# Plot the background gradient
+fig, ax = plt.subplots()
+gradient = ax.contourf(
+    10**xi, 10**yi, zi, levels=100, cmap='viridis', extend='both'
+)
+
+# Overlay the original points for reference
+ax.scatter(10**x, 10**y, c='black', s=10, alpha=0.6, label='Data points')
 
 # Set logarithmic scales for both axes
 ax.set_xscale('log')
@@ -286,8 +313,16 @@ ax.set_yscale('log')
 # Add labels and title
 plt.xlabel("Cross-section area (m²)")
 plt.ylabel("Number density (m⁻³)")
-plt.title("Cross-section Area vs Number Density")
+plt.title("Background Gradient: Cross-section Area vs Number Density")
 
-# Add a colorbar
+# Add a color bar for the gradient
+cbar = plt.colorbar(gradient, ax=ax)
+cbar.set_label("Log Mean Free Path (m)")
+
+# Add a legend
+plt.legend()
+
+# Show the plot
+plt.show()
 cbar = plt.colorbar(scatter, ax=ax)
 cbar.set_label("Mean Free Path (m)")
