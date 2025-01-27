@@ -7,10 +7,13 @@ Created on Tue Jan 21 10:03:21 2025
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.interpolate import griddata
 from matplotlib.colors import LogNorm
 from scipy.optimize import curve_fit
-from scipy import stats    
+from scipy import stats
+from scipy.interpolate import griddata
+from scipy.interpolate import interp2d
+import matplotlib.colors as colors
+from scipy.interpolate import RBFInterpolator
 
 datasetEuK = np.loadtxt('Europa_kruger_extremes.csv', delimiter=',').T
 datasetIK = np.loadtxt('Io_kruger_extremes.csv', delimiter=',').T
@@ -278,38 +281,43 @@ y = np.log10(all_ndensity)  # Log scale for number density
 z = np.log10(all_MFP)  # Log scale for mean free path
 
 # Mask out invalid values (zero or infinity)
-mask = ~(
-    np.isinf(x) | np.isnan(x) | np.isinf(y) | np.isnan(y) | np.isinf(z) | np.isnan(z)
-)
+mask = ~(np.isinf(x) | np.isnan(x) | np.isinf(y) | np.isnan(y) | np.isinf(z) | np.isnan(z))
 x = x[mask]
 y = y[mask]
 z = z[mask]
 
-# Define grid resolution and extend the grid limits
+# Define a grid for the background
+x = np.log10(all_CSA)  # Log scale for cross-sectional area
+y = np.log10(all_ndensity)  # Log scale for number density
+z = np.log10(all_MFP)  # Log scale for mean free path
+
+# Mask out invalid values (zero or infinity)
+mask = ~(np.isinf(x) | np.isnan(x) | np.isinf(y) | np.isnan(y) | np.isinf(z) | np.isnan(z))
+x = x[mask]
+y = y[mask]
+z = z[mask]
+
+# Combine x and y into a single array for RBF
+points = np.vstack((x, y)).T
+
+
+# Define the grid for interpolation
 xi = np.linspace(min(x), max(x), 300)
 yi = np.linspace(min(y), max(y), 300)
-
-# Create a 2D grid for interpolation
 xi_mesh, yi_mesh = np.meshgrid(xi, yi)
+grid_points = np.vstack((xi_mesh.ravel(), yi_mesh.ravel())).T
 
-# Interpolate the MFP values onto the grid
-# Use 'nearest' to fill areas outside data points
-zi = griddata((x, y), z, (xi_mesh, yi_mesh), method='linear')
-
-# Fill missing values outside the convex hull using 'nearest'
-zi_nearest = griddata((x, y), z, (xi_mesh, yi_mesh), method='nearest')
-
-# Combine 'linear' and 'nearest' results to cover the full range
-zi = np.where(np.isnan(zi), zi_nearest, zi)
+# Apply Radial Basis Function (RBF) interpolation
+rbf = RBFInterpolator(points, z, smoothing=0.1)  # Adjust smoothing for desired smoothness
+zi = rbf(grid_points).reshape(xi_mesh.shape)
 
 # Plot the background gradient
 fig, ax = plt.subplots()
-gradient = ax.contourf(
-    10**xi, 10**yi, zi, levels=100, cmap='viridis', extend='both'
-)
+gradient = ax.contourf(10**xi_mesh, 10**yi_mesh, zi, levels=100, cmap='viridis', extend='both')
 
 # Overlay the original points for reference
-ax.scatter(10**x, 10**y, c='black', s=10, alpha=0.6, label='Data points')
+ax.scatter(10**x, 10**y, c='black', s=25, alpha=0.8, label='Data points')
+
 
 # Set logarithmic scales for both axes
 ax.set_xscale('log')
@@ -318,7 +326,7 @@ ax.set_yscale('log')
 # Add labels and title
 plt.xlabel("Cross-section area (m²)")
 plt.ylabel("Number density (m⁻³)")
-plt.title("Background Gradient: Cross-section Area vs Number Density")
+plt.title("Cross-section Area vs Number Density")
 
 # Add a color bar for the gradient
 cbar = plt.colorbar(gradient, ax=ax)
