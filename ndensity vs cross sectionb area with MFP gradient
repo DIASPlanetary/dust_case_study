@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jan 27 14:03:21 2025
+Created on Tue Jan 28 13:58:24 2025
 
 @author: march
 """
@@ -8,11 +8,6 @@ Created on Tue Jan 27 14:03:21 2025
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
-from scipy.optimize import curve_fit
-from scipy import stats
-from scipy.interpolate import griddata
-from scipy.interpolate import interp2d
-import matplotlib.colors as colors
 from scipy.interpolate import RBFInterpolator
 
 datasetEuK = np.loadtxt('Europa_kruger_extremes.csv', delimiter=',').T
@@ -60,7 +55,7 @@ MFPIA = []
 
 for i in range(0, len(ndensityEuK)):
     for j in range(0, len(REuK)):
-        csa =4*3.14*(REuK[j]**2)
+        csa = 4*3.14*(REuK[j]**2)
         CSAEuK.append(csa)
         mfp = 1/(ndensityEuK[i]*csa)
         MFPEuK.append(mfp)
@@ -76,7 +71,7 @@ print('Mean Free Path', MFPEuK)
 
 for i in range(0, len(ndensityIK)):
     for j in range(0, len(RIK)):
-        csa =4*3.14*(RIK[j]**2)
+        csa = 4*3.14*(RIK[j]**2)
         CSAIK.append(csa)
         mfp = 1/(ndensityIK[i]*csa)
         MFPIK.append(mfp)
@@ -92,7 +87,7 @@ print('Mean Free Path', MFPIK)
 
 for i in range(0, len(ndensityCK)):
     for j in range(0, len(RCK)):
-        csa =4*3.14*(RCK[j]**2)
+        csa = 4*3.14*(RCK[j]**2)
         CSACK.append(csa)
         mfp = 1/(ndensityCK[i]*csa)
         MFPCK.append(mfp)
@@ -108,7 +103,7 @@ print('Mean Free Path', MFPCK)
 
 for i in range(0, len(ndensityIM)):
     for j in range(0, len(RIM)):
-        csa =4*3.14*(RIM[j]**2)
+        csa = 4*3.14*(RIM[j]**2)
         CSAIM.append(csa)
         mfp = 1/(ndensityIM[i]*csa)
         MFPIM.append(mfp)
@@ -124,7 +119,7 @@ print('Mean Free Path', MFPIM)
 
 for i in range(0, len(ndensityEuS)):
     for j in range(0, len(REuS)):
-        csa =4*3.14*(REuS[j]**2)
+        csa = 4*3.14*(REuS[j]**2)
         CSAEuS.append(csa)
         mfp = 1/(ndensityEuS[i]*csa)
         MFPEuS.append(mfp)
@@ -140,7 +135,7 @@ print('Mean Free Path', MFPEuS)
 
 for i in range(0, len(ndensityEnM)):
     for j in range(0, len(REnM)):
-        csa =4*3.14*(REnM[j]**2)
+        csa = 4*3.14*(REnM[j]**2)
         CSAEnM.append(csa)
         mfp = 1/(ndensityEnM[i]*csa)
         MFPEnM.append(mfp)
@@ -156,7 +151,7 @@ print('Mean Free Path', MFPEnM)
 
 for i in range(0, len(ndensityIA)):
     for j in range(0, len(RIA)):
-        csa =4*3.14*(RIA[j]**2)
+        csa = 4*3.14*(RIA[j]**2)
         CSAIA.append(csa)
         mfp = 1/(ndensityIA[i]*csa)
         MFPIA.append(mfp)
@@ -169,8 +164,6 @@ ndensityIA = np.array(ndensityIA)
 print('Io Adeloye data:')
 print('Cross Section area of dust:', CSAIA)
 print('Mean Free Path', MFPIA)
-
-
 
 X_EuK = CSAEuK
 X_IK = CSAIK
@@ -223,29 +216,29 @@ for m in range(0, 2):
 for m in range(2, 4):
     Y_IA.append(ndensityIA[1])
 
-
-
-
 fig, ax = plt.subplots()
-ax.scatter(X_EuK, Y_EuK, label='Europa Kruger et al., 2003', marker='.', color='b')
-ax.scatter(X_IK, Y_IK, label='Io Kruger et al., 2003', marker='.', color='y')
-ax.scatter(X_CK, Y_CK, label='Callisto Kruger et al., 2003', marker='.', color='r')
-ax.scatter(X_IM, Y_IM, label='Io McDoniel et al., 2015', marker='s', color='y')
-ax.scatter(X_EuS, Y_EuS, label='Europa Southworth et al., 2015', marker='^', color='b')
-ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015', marker='D', color='g')
-ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025', marker='x', color='y')
+ax.scatter(X_EuK, Y_EuK, label='Europa Kruger et al., 2003',
+           marker='.', color='b')
+ax.scatter(X_IK, Y_IK, label='Io Kruger et al., 2003',
+           marker='.', color='y')
+ax.scatter(X_CK, Y_CK, label='Callisto Kruger et al., 2003',
+           marker='.', color='r')
+ax.scatter(X_IM, Y_IM, label='Io McDoniel et al., 2015',
+           marker='s', color='y')
+ax.scatter(X_EuS, Y_EuS, label='Europa Southworth et al., 2015',
+           marker='^', color='b')
+ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015',
+           marker='D', color='g')
+ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025',
+           marker='x', color='y')
 
 ax.set_yscale('log')
 ax.set_xscale('log')
 
 plt.title("Number Density vs Cross-Section Area for Dust")
 
-
-plt.xlabel("Cross-section area (m^2)")    
-plt.ylabel("Number density (m^-3)")   
-
-
-#plt.legend(loc='lower left', fontsize="4")
+plt.xlabel("Cross-section area (m^2)")
+plt.ylabel("Number density (m^-3)")
 
 # Initialize lists to hold the final combined data
 all_CSA = []
@@ -264,7 +257,7 @@ for CSA, ndensity, MFP in [
 ]:
     # Repeat ndensity to match CSA and MFP sizes
     repeated_ndensity = np.repeat(ndensity, len(CSA) // len(ndensity))
-    
+
     # Append to the combined lists
     all_CSA.extend(CSA)
     all_ndensity.extend(repeated_ndensity)
@@ -281,88 +274,103 @@ y = np.log10(all_ndensity)  # Log scale for number density
 z = np.log10(all_MFP)  # Log scale for mean free path
 
 # Mask out invalid values (zero or infinity)
-mask = ~(np.isinf(x) | np.isnan(x) | np.isinf(y) | np.isnan(y) | np.isinf(z) | np.isnan(z))
+mask = ~(np.isinf(x) |
+         np.isnan(x) |
+         np.isinf(y) |
+         np.isnan(y) |
+         np.isinf(z) |
+         np.isnan(z))
+
 x = x[mask]
 y = y[mask]
 z = z[mask]
 
-# Define a grid for the background
-x = np.log10(all_CSA)  # Log scale for cross-sectional area
-y = np.log10(all_ndensity)  # Log scale for number density
-z = np.log10(all_MFP)  # Log scale for mean free path
+# Define radii in meters
+solar_system_radius_mfp = 1.78e10  # Solar System radius (m)
+jupiter_radius_mfp = 69911e3  # Jupiter radius (m)
+jupiter_magnetosphere_mfp = 75 * jupiter_radius_mfp
+# Jupiter magnetosphere radius (m)
+io_radius_mfp = 1821e3  # Io radius (m)
+callisto_radius_mfp = 2410e3  # Callisto radius (m)
+europa_radius_mfp = 1560e3  # Europa radius (m)
+enceladus_radius_mfp = 500e3  # Enceladus radius (m)
 
-# Mask out invalid values (zero or infinity)
-mask = ~(np.isinf(x) | np.isnan(x) | np.isinf(y) | np.isnan(y) | np.isinf(z) | np.isnan(z))
-x = x[mask]
-y = y[mask]
-z = z[mask]
+# List of (MFP value, label, color) for diagonal lines
+mfp_values = [
+    (solar_system_radius_mfp, 'Solar System Radius (1.78e10 m)', 'orange'),
+    (jupiter_radius_mfp, 'Jupiter Radius (69,911 km)', 'red'),
+    (jupiter_magnetosphere_mfp, 'Jupiter Magnetosphere (75 Jupiter Radius)',
+     'purple'),
+    (io_radius_mfp, 'Io Radius (1,821 km)', 'green'),
+    (callisto_radius_mfp, 'Callisto Radius (2,410 km)', 'green'),
+    (europa_radius_mfp, 'Europa Radius (1,560 km)', 'cyan'),
+    (enceladus_radius_mfp, 'Enceladus Radius (500 km)', 'yellow'),
+]
 
-# Combine x and y into a single array for RBF
+# Define a grid for plotting with expanded edges
+x_margin = 0.1  # Margin as a fraction of the range
+y_margin = 0.1
+x_range = x.max() - x.min()
+y_range = y.max() - y.min()
+
+x_grid = np.linspace(x.min() - x_margin * x_range,
+                     x.max() + x_margin * x_range, 200)
+y_grid = np.linspace(y.min() - y_margin * y_range,
+                     y.max() + y_margin * y_range, 200)
+X_grid, Y_grid = np.meshgrid(x_grid, y_grid)
+
+# Interpolate the data using RBFInterpolator
 points = np.vstack((x, y)).T
+rbf = RBFInterpolator(points, z, kernel='linear', epsilon=1)
+Z_grid = rbf(np.vstack((X_grid.ravel(),
+                        Y_grid.ravel())).T).reshape(X_grid.shape)
 
+# Plot the heatmap with pcolormesh
+fig, ax = plt.subplots(figsize=(12, 10))
+heatmap = ax.pcolormesh(
+    10**x_grid, 10**y_grid,
+    10**Z_grid,  # Convert back from log scale for axes and color
+    cmap='plasma',
+    norm=LogNorm(vmin=10**z.min(),
+                 vmax=10**z.max()),  # Logarithmic color scaling
+    shading='auto'  # Avoid grid artifacts
+)
 
-# Define the grid for interpolation
-xi = np.linspace(min(x), max(x), 300)
-yi = np.linspace(min(y), max(y), 300)
-xi_mesh, yi_mesh = np.meshgrid(xi, yi)
-grid_points = np.vstack((xi_mesh.ravel(), yi_mesh.ravel())).T
+# Add a colorbar
+cbar = fig.colorbar(heatmap, ax=ax, pad=0.02)
+cbar.set_label("Mean Free Path (m)", fontsize=12)
 
-# Apply Radial Basis Function (RBF) interpolation
-rbf = RBFInterpolator(points, z, smoothing=0.1)  # Adjust smoothing for desired smoothness
-zi = rbf(grid_points).reshape(xi_mesh.shape)
+# Add scatterplot points with larger markers
+marker_size = 100  # Adjust marker size for better visibility
+ax.scatter(X_EuK, Y_EuK, label='Europa Kruger et al., 2003',
+           marker='.', s=marker_size, color='white', edgecolor='black')
+ax.scatter(X_IK, Y_IK, label='Io Kruger et al., 2003',
+           marker='.', s=marker_size, color='white', edgecolor='yellow')
+ax.scatter(X_CK, Y_CK, label='Callisto Kruger et al., 2003',
+           marker='.', s=marker_size, color='white', edgecolor='white')
+ax.scatter(X_IM, Y_IM, label='Io McDoniel et al., 2015',
+           marker='s', s=marker_size, color='white', edgecolor='black')
+ax.scatter(X_EuS, Y_EuS, label='Europa Southworth et al., 2015',
+           marker='^', s=marker_size, color='white', edgecolor='black')
+ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015',
+           marker='D', s=marker_size, color='white', edgecolor='black')
+ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025',
+           marker='X', s=marker_size, color='white', edgecolor='black')
 
-# Plot the background gradient
-fig, ax = plt.subplots()
-gradient = ax.contourf(10**xi_mesh, 10**yi_mesh, zi, levels=100, cmap='viridis', extend='both')
+# Add diagonal lines for each MFP value
+for mfp_value, label, line_color in mfp_values:
+    y_diagonal = 1 / (mfp_value * 10**x_grid)
+    ax.plot(10**x_grid, y_diagonal, '--', color=line_color, lw=2, label=label)
 
-# Overlay the original points for reference
-ax.scatter(10**x, 10**y, c='black', s=25, alpha=0.8, label='Data points')
-
-
-# Set logarithmic scales for both axes
+# Set plot labels, scales, and title
 ax.set_xscale('log')
 ax.set_yscale('log')
+ax.set_xlabel("Cross-section Area (m^2)", fontsize=12)
+ax.set_ylabel("Number Density (m^-3)", fontsize=12)
+ax.set_title("Colormap with Mean Free Path Diagonal Lines", fontsize=14)
 
-# Add labels and title
-plt.xlabel("Cross-section area (m²)")
-plt.ylabel("Number density (m⁻³)")
-plt.title("Cross-section Area vs Number Density")
+# Add legend
+ax.legend(loc='center left', fontsize=7.9)
 
-# Add a color bar for the gradient
-cbar = plt.colorbar(gradient, ax=ax)
-cbar.set_label("Log Mean Free Path (m)")
-
-# Add a legend
-plt.legend()
-
-# Show the plot
-plt.show()
-
-# Plot the background gradient
-fig, ax = plt.subplots()
-gradient = ax.contourf(10**xi_mesh, 10**yi_mesh, zi, levels=100, cmap='viridis', extend='both')
-
-# Add diagonal contour lines following the gradient scaling
-contour_lines = ax.contour(10**xi_mesh, 10**yi_mesh, zi, levels=10, colors='white', linestyles='--', linewidths=0.8, alpha=0.8)
-
-# Add labels to the contour lines with MFP values
-ax.clabel(contour_lines, inline=True, inline_spacing=0, fontsize=8, fmt=lambda x: f"{10**x:.2e} m")
-
-# Overlay the original points for reference
-ax.scatter(10**x, 10**y, c='white', s=25, alpha=0.8)
-
-# Set logarithmic scales for both axes
-ax.set_xscale('log')
-ax.set_yscale('log')
-
-# Add labels and title
-plt.xlabel("Cross-section area (m²)")
-plt.ylabel("Number density (m⁻³)")
-plt.title("Cross-section Area vs Number Density")
-
-# Add a color bar for the gradient
-cbar = plt.colorbar(gradient, ax=ax)
-cbar.set_label("Log Mean Free Path (m)")
-
-# Show the plot
+plt.tight_layout()
 plt.show()
