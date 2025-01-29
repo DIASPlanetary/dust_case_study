@@ -286,25 +286,21 @@ y = y[mask]
 z = z[mask]
 
 # Define radii in meters
-solar_system_radius_mfp = 1.78e10  # Solar System radius (m)
-jupiter_radius_mfp = 69911e3  # Jupiter radius (m)
-jupiter_magnetosphere_mfp = 75 * jupiter_radius_mfp
+solar_system_radius = 1.78e10  # Solar System radius (m)
+jupiter_radius = 69911e3  # Jupiter radius (m)
+jupiter_magnetosphere = 75 * jupiter_radius
 # Jupiter magnetosphere radius (m)
-io_radius_mfp = 1821e3  # Io radius (m)
-callisto_radius_mfp = 2410e3  # Callisto radius (m)
-europa_radius_mfp = 1560e3  # Europa radius (m)
-enceladus_radius_mfp = 500e3  # Enceladus radius (m)
+moon_radius_average = 1930e3
+enceladus_radius = 500e3  # Enceladus radius (m)
 
 # List of (MFP value, label, color) for diagonal lines
-mfp_values = [
-    (solar_system_radius_mfp, 'Solar System Radius (1.78e10 m)', 'orange'),
-    (jupiter_radius_mfp, 'Jupiter Radius (69,911 km)', 'red'),
-    (jupiter_magnetosphere_mfp, 'Jupiter Magnetosphere (75 Jupiter Radius)',
+radius_values = [
+    (solar_system_radius, 'Solar System Radius (1.78e10 m)', 'orange'),
+    (jupiter_radius, 'Jupiter Radius (69,911 km)', 'cyan'),
+    (jupiter_magnetosphere, 'Jupiter Magnetosphere (75 Jupiter Radius)',
      'purple'),
-    (io_radius_mfp, 'Io Radius (1,821 km)', 'green'),
-    (callisto_radius_mfp, 'Callisto Radius (2,410 km)', 'green'),
-    (europa_radius_mfp, 'Europa Radius (1,560 km)', 'cyan'),
-    (enceladus_radius_mfp, 'Enceladus Radius (500 km)', 'yellow'),
+    (moon_radius_average, 'Jupiter Moons Average R (1,930 km)', 'lime'),
+    (enceladus_radius, 'Enceladus Radius (500 km)', 'pink'),
 ]
 
 # Define a grid for plotting with expanded edges
@@ -341,33 +337,34 @@ cbar = fig.colorbar(heatmap, ax=ax, pad=0.02)
 cbar.set_label("Mean Free Path (m)", fontsize=12)
 
 # Add scatterplot points with larger markers
-marker_size = 100  # Adjust marker size for better visibility
+marker_size = 150  # Adjust marker size for better visibility
 ax.scatter(X_EuK, Y_EuK, label='Europa Kruger et al., 2003',
-           marker='.', s=marker_size, color='white', edgecolor='black')
+           marker='.', s=marker_size, color='white', edgecolor='blue')
 ax.scatter(X_IK, Y_IK, label='Io Kruger et al., 2003',
            marker='.', s=marker_size, color='white', edgecolor='yellow')
 ax.scatter(X_CK, Y_CK, label='Callisto Kruger et al., 2003',
-           marker='.', s=marker_size, color='white', edgecolor='white')
+           marker='.', s=marker_size, color='white', edgecolor='red')
 ax.scatter(X_IM, Y_IM, label='Io McDoniel et al., 2015',
-           marker='s', s=marker_size, color='white', edgecolor='black')
+           marker='s', s=marker_size, color='white', edgecolor='yellow')
 ax.scatter(X_EuS, Y_EuS, label='Europa Southworth et al., 2015',
-           marker='^', s=marker_size, color='white', edgecolor='black')
+           marker='^', s=marker_size, color='white', edgecolor='blue')
 ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015',
-           marker='D', s=marker_size, color='white', edgecolor='black')
+           marker='D', s=marker_size, color='white', edgecolor='green')
 ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025',
-           marker='X', s=marker_size, color='white', edgecolor='black')
+           marker='X', s=marker_size, color='white', edgecolor='yellow')
 
-# Add diagonal lines for each MFP value
-for mfp_value, label, line_color in mfp_values:
-    y_diagonal = 1 / (mfp_value * 10**x_grid)
+
+# Add diagonal lines for each radius value
+for radius_value, label, line_color in radius_values:
+    y_diagonal = 1 / (radius_value * 10**x_grid)
     ax.plot(10**x_grid, y_diagonal, '--', color=line_color, lw=2, label=label)
 
 # Set plot labels, scales, and title
 ax.set_xscale('log')
 ax.set_yscale('log')
-ax.set_xlabel("Cross-section Area (m^2)", fontsize=12)
+ax.set_xlabel("Cross-Section Area (m^2)", fontsize=12)
 ax.set_ylabel("Number Density (m^-3)", fontsize=12)
-ax.set_title("Colormap with Mean Free Path Diagonal Lines", fontsize=14)
+ax.set_title("Colormap of MFP, Number density vs CSA", fontsize=14)
 
 # Add legend
 ax.legend(loc='center left', fontsize=7.9)
