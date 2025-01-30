@@ -410,3 +410,26 @@ ax.legend(loc='lower left', fontsize=7.9, edgecolor='black')
 
 plt.tight_layout()
 plt.show()
+
+# Save the values from all_CSA and all_MFP into a text file
+with open("CSA_MFP_data.txt", "w") as file:
+    file.write("# Cross-Section Area and Mean Free Path Data\n")
+    file.write("# Format: Origin | CSA (m²) | MFP (m)\n\n")
+
+    datasets = [
+        ("Europa Kruger", CSAEuK, MFPEuK),
+        ("Io Kruger", CSAIK, MFPIK),
+        ("Callisto Kruger", CSACK, MFPCK),
+        ("Io McDoniel", CSAIM, MFPIM),
+        ("Europa Southworth", CSAEuS, MFPEuS),
+        ("Enceladus Meier", CSAEnM, MFPEnM),
+        ("Io Adeloye", CSAIA, MFPIA)
+    ]
+
+    for name, CSA_values, MFP_values in datasets:
+        file.write(f"# {name} Data\n")
+        for csa, mfp in zip(CSA_values, MFP_values):
+            file.write(f"{name} | {csa:.6e} | {mfp:.6e}\n")
+        file.write("\n")
+
+print("Data successfully saved to CSA_MFP_data.txt")
