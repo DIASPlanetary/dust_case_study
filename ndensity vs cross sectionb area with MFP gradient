@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from scipy.interpolate import RBFInterpolator
+from scipy.spatial import ConvexHull
 
 datasetEuK = np.loadtxt('Europa_kruger_extremes.csv', delimiter=',').T
 datasetIK = np.loadtxt('Io_kruger_extremes.csv', delimiter=',').T
@@ -237,8 +238,8 @@ ax.set_xscale('log')
 
 plt.title("Number Density vs Cross-Section Area for Dust")
 
-plt.xlabel("Cross-section area (m^2)")
-plt.ylabel("Number density (m^-3)")
+plt.xlabel("Cross-Section Area (m²)", fontsize=14)
+plt.ylabel("Number Density (m⁻³)", fontsize=14)
 
 # Initialize lists to hold the final combined data
 all_CSA = []
@@ -292,15 +293,17 @@ jupiter_magnetosphere = 75 * jupiter_radius
 # Jupiter magnetosphere radius (m)
 moon_radius_average = 1930e3
 enceladus_radius = 500e3  # Enceladus radius (m)
+tvashtar_plume = 300e3  # Tvashtar altitude (m)
 
 # List of (MFP value, label, color) for diagonal lines
 radius_values = [
     (solar_system_radius, 'Solar System Radius (1.78e10 m)', 'orange'),
     (jupiter_radius, 'Jupiter Radius (69,911 km)', 'cyan'),
-    (jupiter_magnetosphere, 'Jupiter Magnetosphere (75 Jupiter Radius)',
+    (jupiter_magnetosphere, 'Jupiter Magnetosphere (5,243,325 km)',
      'purple'),
     (moon_radius_average, 'Jupiter Moons Average R (1,930 km)', 'lime'),
     (enceladus_radius, 'Enceladus Radius (500 km)', 'pink'),
+    (tvashtar_plume, 'Tvashtar Plume (300 km)', 'yellow')
 ]
 
 # Define a grid for plotting with expanded edges
@@ -334,7 +337,7 @@ heatmap = ax.pcolormesh(
 
 # Add a colorbar
 cbar = fig.colorbar(heatmap, ax=ax, pad=0.02)
-cbar.set_label("Mean Free Path (m)", fontsize=12)
+cbar.set_label("Mean Free Path (m)", fontsize=14)
 
 # Add scatterplot points with larger markers
 marker_size = 150  # Adjust marker size for better visibility
@@ -354,6 +357,42 @@ ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025',
            marker='X', s=marker_size, color='white', edgecolor='yellow')
 
 
+# Function to add a shadow around a dataset
+def add_shadow_region(x_data, y_data, color, alpha=0.3):
+    # Draws a shadow around a dataset using Convex Hull if possible.
+    x_data, y_data = np.array(x_data), np.array(y_data)
+
+    # Convert to log scale, handling zeros
+    x_data = np.where(x_data > 0, np.log10(x_data), np.nan)
+    y_data = np.where(y_data > 0, np.log10(y_data), np.nan)
+
+    # Ensure unique points for ConvexHull
+    unique_points = np.column_stack((x_data, y_data))
+    unique_points = np.unique(unique_points, axis=0)
+
+    # ConvexHull requires at least 3 unique points
+    if unique_points.shape[0] >= 3:
+        try:
+            hull = ConvexHull(unique_points)
+            hull_x = 10**unique_points[hull.vertices, 0]
+            # Convert back from log scale
+            hull_y = 10**unique_points[hull.vertices, 1]
+            ax.fill(hull_x, hull_y, color=color, alpha=alpha, linewidth=0)
+        except Exception as e:
+            print(f"ConvexHull error: {e}")  # Debugging
+    else:
+        print("o")
+
+
+# Apply shadowed regions to each dataset
+add_shadow_region(X_EuK, Y_EuK, 'blue')
+add_shadow_region(X_IK, Y_IK, 'yellow')
+add_shadow_region(X_CK, Y_CK, 'red')
+add_shadow_region(X_IM, Y_IM, 'yellow')
+add_shadow_region(X_EuS, Y_EuS, 'blue')
+add_shadow_region(X_EnM, Y_EnM, 'green')
+add_shadow_region(X_IA, Y_IA, 'yellow')
+
 # Add diagonal lines for each radius value
 for radius_value, label, line_color in radius_values:
     y_diagonal = 1 / (radius_value * 10**x_grid)
@@ -362,12 +401,12 @@ for radius_value, label, line_color in radius_values:
 # Set plot labels, scales, and title
 ax.set_xscale('log')
 ax.set_yscale('log')
-ax.set_xlabel("Cross-Section Area (m^2)", fontsize=12)
-ax.set_ylabel("Number Density (m^-3)", fontsize=12)
-ax.set_title("Colormap of MFP, Number density vs CSA", fontsize=14)
+ax.set_xlabel("Cross-Section Area (m²)", fontsize=14)
+ax.set_ylabel("Number Density (m⁻³)", fontsize=14)
+ax.set_title("Mean Free Path Variation Across Moons colormap", fontsize=18)
 
 # Add legend
-ax.legend(loc='center left', fontsize=7.9)
+ax.legend(loc='lower left', fontsize=7.9, edgecolor='black')
 
 plt.tight_layout()
 plt.show()
