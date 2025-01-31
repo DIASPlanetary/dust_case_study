@@ -287,6 +287,8 @@ y = y[mask]
 z = z[mask]
 
 # Define radii in meters
+parsec_length = 3.086e16  #parsec
+light_year = 9.46e15  # light year
 solar_system_radius = 1.78e10  # Solar System radius (m)
 jupiter_radius = 69911e3  # Jupiter radius (m)
 jupiter_magnetosphere = 75 * jupiter_radius
@@ -295,15 +297,18 @@ moon_radius_average = 1930e3
 enceladus_radius = 500e3  # Enceladus radius (m)
 tvashtar_plume = 300e3  # Tvashtar altitude (m)
 
-# List of (MFP value, label, color) for diagonal lines
+
+# List of (radius value, label, color) for diagonal lines
 radius_values = [
-    (solar_system_radius, 'Solar System Radius (1.78e10 m)', 'orange'),
+    (solar_system_radius, 'Solar System Radius (1.78e7 km)', 'orange'),
     (jupiter_radius, 'Jupiter Radius (69,911 km)', 'cyan'),
     (jupiter_magnetosphere, 'Jupiter Magnetosphere (5,243,325 km)',
      'purple'),
     (moon_radius_average, 'Jupiter Moons Average R (1,930 km)', 'lime'),
     (enceladus_radius, 'Enceladus Radius (500 km)', 'pink'),
-    (tvashtar_plume, 'Tvashtar Plume (300 km)', 'yellow')
+    (tvashtar_plume, 'Tvashtar Plume (300 km)', 'yellow'),
+    (light_year, '1 Light Year (9.46e12 km)', 'purple'),
+    (parsec_length, '1 parsec (3.086e13 km)', 'red')
 ]
 
 # Define a grid for plotting with expanded edges
