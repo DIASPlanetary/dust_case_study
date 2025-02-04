@@ -300,15 +300,15 @@ tvashtar_plume = 300e3  # Tvashtar altitude (m)
 
 # List of (radius value, label, color) for diagonal lines
 radius_values = [
+    (parsec_length, '1 parsec (3.086e13 km)', 'red'),
+    (light_year, '1 Light Year (9.46e12 km)', 'purple'),
     (solar_system_radius, 'Solar System Radius (1.78e7 km)', 'orange'),
-    (jupiter_radius, 'Jupiter Radius (69,911 km)', 'cyan'),
     (jupiter_magnetosphere, 'Jupiter Magnetosphere (5,243,325 km)',
      'purple'),
+    (jupiter_radius, 'Jupiter Radius (69,911 km)', 'cyan'),
     (moon_radius_average, 'Jupiter Moons Average R (1,930 km)', 'lime'),
     (enceladus_radius, 'Enceladus Radius (500 km)', 'pink'),
-    (tvashtar_plume, 'Tvashtar Plume (300 km)', 'yellow'),
-    (light_year, '1 Light Year (9.46e12 km)', 'purple'),
-    (parsec_length, '1 parsec (3.086e13 km)', 'red')
+    (tvashtar_plume, 'Tvashtar Plume (300 km)', 'yellow')
 ]
 
 # Define a grid for plotting with expanded edges
