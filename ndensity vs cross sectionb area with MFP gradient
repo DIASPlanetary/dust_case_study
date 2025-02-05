@@ -11,6 +11,7 @@ from matplotlib.colors import LogNorm
 from scipy.interpolate import RBFInterpolator
 from scipy.spatial import ConvexHull
 
+# Load the datasets from the respective CSV files
 datasetEuK = np.loadtxt('Europa_kruger_extremes.csv', delimiter=',').T
 datasetIK = np.loadtxt('Io_kruger_extremes.csv', delimiter=',').T
 datasetCK = np.loadtxt('Callisto_kruger_extremes.csv', delimiter=',').T
@@ -19,7 +20,9 @@ datasetEuS = np.loadtxt('Europa_south_extremes.csv', delimiter=',').T
 datasetEnM = np.loadtxt('Enceladus_meier_extremes.csv', delimiter=',').T
 datasetIA = np.loadtxt('Io_adeloye_extremes.csv', delimiter=',').T
 
+# Assign the first column as Radius of the particle
 REuK = datasetEuK[0]
+# Assign the second column as number density of particles
 ndensityEuK = datasetEuK[1]
 CSAEuK = []
 MFPEuK = []
@@ -55,21 +58,21 @@ CSAIA = []
 MFPIA = []
 
 for i in range(0, len(ndensityEuK)):
+    # For all the values of ndensity
     for j in range(0, len(REuK)):
-        csa = 4*3.14*(REuK[j]**2)
-        CSAEuK.append(csa)
-        mfp = 1/(ndensityEuK[i]*csa)
-        MFPEuK.append(mfp)
+        # For all the values of radius
+        csa = 4*3.14*(REuK[j]**2)  # Calculate Cross Section Area
+        CSAEuK.append(csa)  # Add CSA value to CSA list
+        mfp = 1/(ndensityEuK[i]*csa)  # Calculate Mean Free Path value
+        MFPEuK.append(mfp)  # Add MFP value to MFP list
 
+# Transform the above lists  in arrays
 REuK = np.array(REuK)
 CSAEuK = np.array(CSAEuK)
 MFPEuK = np.array(MFPEuK)
 ndensityEuK = np.array(ndensityEuK)
 
-print('Europa Kruger data:')
-print('Cross Section area of dust:', CSAEuK)
-print('Mean Free Path', MFPEuK)
-
+# Process repeated for all datasets loaded
 for i in range(0, len(ndensityIK)):
     for j in range(0, len(RIK)):
         csa = 4*3.14*(RIK[j]**2)
@@ -81,10 +84,6 @@ RIK = np.array(RIK)
 CSAIK = np.array(CSAIK)
 MFPIK = np.array(MFPIK)
 ndensityIK = np.array(ndensityIK)
-
-print('Io Kruger data:')
-print('Cross Section area of dust:', CSAIK)
-print('Mean Free Path', MFPIK)
 
 for i in range(0, len(ndensityCK)):
     for j in range(0, len(RCK)):
@@ -98,10 +97,6 @@ CSACK = np.array(CSACK)
 MFPCK = np.array(MFPCK)
 ndensitCK = np.array(ndensityCK)
 
-print('Callisto Kruger data:')
-print('Cross Section area of dust:', CSACK)
-print('Mean Free Path', MFPCK)
-
 for i in range(0, len(ndensityIM)):
     for j in range(0, len(RIM)):
         csa = 4*3.14*(RIM[j]**2)
@@ -113,10 +108,6 @@ RIM = np.array(RIM)
 CSAIM = np.array(CSAIM)
 MFPIM = np.array(MFPIM)
 ndensityIM = np.array(ndensityIM)
-
-print('Io Mcdoniel data:')
-print('Cross Section area of dust:', CSAIM)
-print('Mean Free Path', MFPIM)
 
 for i in range(0, len(ndensityEuS)):
     for j in range(0, len(REuS)):
@@ -130,10 +121,6 @@ CSAEuS = np.array(CSAEuS)
 MFPEuS = np.array(MFPEuS)
 ndensityEuS = np.array(ndensityEuS)
 
-print('Europa Southworth data:')
-print('Cross Section area of dust:', CSAEuS)
-print('Mean Free Path', MFPEuS)
-
 for i in range(0, len(ndensityEnM)):
     for j in range(0, len(REnM)):
         csa = 4*3.14*(REnM[j]**2)
@@ -145,10 +132,6 @@ REnM = np.array(REnM)
 CSAEnM = np.array(CSAEnM)
 MFPEnM = np.array(MFPEnM)
 ndensityEnM = np.array(ndensityEnM)
-
-print('Enceladus Meier data:')
-print('Cross Section area of dust:', CSAEnM)
-print('Mean Free Path', MFPEnM)
 
 for i in range(0, len(ndensityIA)):
     for j in range(0, len(RIA)):
@@ -162,10 +145,7 @@ CSAIA = np.array(CSAIA)
 MFPIA = np.array(MFPIA)
 ndensityIA = np.array(ndensityIA)
 
-print('Io Adeloye data:')
-print('Cross Section area of dust:', CSAIA)
-print('Mean Free Path', MFPIA)
-
+# Assign X and Y values for plotting
 X_EuK = CSAEuK
 X_IK = CSAIK
 X_CK = CSACK
@@ -181,7 +161,8 @@ Y_EuS = []
 Y_EnM = []
 Y_IA = []
 
-
+# For each dataset, repeat the number density value,
+# to match the number of x values in each set
 for m in range(0, 2):
     Y_EuK.append(ndensityEuK[0])
 for m in range(2, 4):
@@ -217,6 +198,7 @@ for m in range(0, 2):
 for m in range(2, 4):
     Y_IA.append(ndensityIA[1])
 
+# Plot the individual sets on a scatter plot
 fig, ax = plt.subplots()
 ax.scatter(X_EuK, Y_EuK, label='Europa Kruger et al., 2003',
            marker='.', color='b')
@@ -233,15 +215,18 @@ ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015',
 ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025',
            marker='x', color='y')
 
+# To visualize all points easly, both axis are set with log scale
 ax.set_yscale('log')
 ax.set_xscale('log')
 
+# Plot title
 plt.title("Number Density vs Cross-Section Area for Dust")
 
+# Plot labels
 plt.xlabel("Cross-Section Area (m²)", fontsize=14)
 plt.ylabel("Number Density (m⁻³)", fontsize=14)
 
-# Initialize lists to hold the final combined data
+# Create lists to contain all the combined data
 all_CSA = []
 all_ndensity = []
 all_MFP = []
@@ -287,14 +272,14 @@ y = y[mask]
 z = z[mask]
 
 # Define radii in meters
-parsec_length = 3.086e16  #parsec
+parsec_length = 3.086e16  # parsec
 light_year = 9.46e15  # light year
 solar_system_radius = 1.78e10  # Solar System radius (m)
 jupiter_radius = 69911e3  # Jupiter radius (m)
 jupiter_magnetosphere = 75 * jupiter_radius
 # Jupiter magnetosphere radius (m)
 moon_radius_average = 1930e3
-enceladus_radius = 500e3  # Enceladus radius (m)
+enceladus_radius = 3250e3  # Enceladus plume (m)
 tvashtar_plume = 300e3  # Tvashtar altitude (m)
 
 
@@ -303,12 +288,12 @@ radius_values = [
     (parsec_length, '1 parsec (3.086e13 km)', 'red'),
     (light_year, '1 Light Year (9.46e12 km)', 'purple'),
     (solar_system_radius, 'Solar System Radius (1.78e7 km)', 'orange'),
-    (jupiter_magnetosphere, 'Jupiter Magnetosphere (5,243,325 km)',
+    (jupiter_magnetosphere, 'Jupiter Magnetosphere (5.24e6 km)',
      'purple'),
-    (jupiter_radius, 'Jupiter Radius (69,911 km)', 'cyan'),
-    (moon_radius_average, 'Jupiter Moons Average R (1,930 km)', 'lime'),
-    (enceladus_radius, 'Enceladus Radius (500 km)', 'pink'),
-    (tvashtar_plume, 'Tvashtar Plume (300 km)', 'yellow')
+    (jupiter_radius, 'Jupiter Radius (6.99e4 km)', 'cyan'),
+    (enceladus_radius, 'Enceladus Plume (3.25e3 km)', 'pink'),
+    (moon_radius_average, 'Jupiter Moons Average R (1.93e3 km)', 'lime'),
+    (tvashtar_plume, 'Tvashtar Plume (3.00e2 km)', 'yellow')
 ]
 
 # Define a grid for plotting with expanded edges
@@ -363,7 +348,7 @@ ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025',
 
 
 # Function to add a shadow around a dataset
-def add_shadow_region(x_data, y_data, color, alpha=0.3):
+def add_shadow_region(x_data, y_data, color, alpha=0.4):
     # Draws a shadow around a dataset using Convex Hull if possible.
     x_data, y_data = np.array(x_data), np.array(y_data)
 
@@ -390,13 +375,35 @@ def add_shadow_region(x_data, y_data, color, alpha=0.3):
 
 
 # Apply shadowed regions to each dataset
-add_shadow_region(X_EuK, Y_EuK, 'blue')
-add_shadow_region(X_IK, Y_IK, 'yellow')
-add_shadow_region(X_CK, Y_CK, 'red')
-add_shadow_region(X_IM, Y_IM, 'yellow')
-add_shadow_region(X_EuS, Y_EuS, 'blue')
-add_shadow_region(X_EnM, Y_EnM, 'green')
-add_shadow_region(X_IA, Y_IA, 'yellow')
+add_shadow_region(X_EuK, Y_EuK, 'black')
+add_shadow_region(X_IK, Y_IK, 'black')
+add_shadow_region(X_CK, Y_CK, 'black')
+add_shadow_region(X_IM, Y_IM, 'black')
+add_shadow_region(X_EuS, Y_EuS, 'black')
+add_shadow_region(X_EnM, Y_EnM, 'black')
+add_shadow_region(X_IA, Y_IA, 'black')
+
+
+# Function to add labeled shadowed boxes
+def add_label_box(x_data, y_data, label, color):
+    """Places a label box near the dataset."""
+    x_pos = np.median(x_data)  # Use median to find a representative position
+    y_pos = np.median(y_data)
+
+    ax.text(x_pos, y_pos, label, fontsize=10, color=color,
+            ha='center', va='center',
+            bbox=dict(facecolor='white',
+                      edgecolor=color, boxstyle='round,pad=0.3', alpha=1))
+
+
+# Add boxes for each dataset
+add_label_box(X_EuK, Y_EuK, 'Europa Kruger', 'black')
+add_label_box(X_IK, Y_IK, 'Io Kruger', 'black')
+add_label_box(X_CK, Y_CK, 'Callisto Kruger', 'black')
+add_label_box(X_IM, Y_IM, 'Io McDoniel', 'black')
+add_label_box(X_EuS, Y_EuS, 'Europa Southworth', 'black')
+add_label_box(X_EnM, Y_EnM, 'Enceladus Meier', 'black')
+add_label_box(X_IA, Y_IA, 'Io Adeloye', 'black')
 
 # Add diagonal lines for each radius value
 for radius_value, label, line_color in radius_values:
