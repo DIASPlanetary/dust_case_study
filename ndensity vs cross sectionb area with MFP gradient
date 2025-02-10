@@ -72,9 +72,6 @@ CSAEuK = np.array(CSAEuK)
 MFPEuK = np.array(MFPEuK)
 ndensityEuK = np.array(ndensityEuK)
 
-# test of changes from desktop
-# test par
-
 # Process repeated for all datasets loaded
 for i in range(0, len(ndensityIK)):
     for j in range(0, len(RIK)):
@@ -262,7 +259,7 @@ x = np.log10(all_CSA)  # Log scale for cross-sectional area
 y = np.log10(all_ndensity)  # Log scale for number density
 z = np.log10(all_MFP)  # Log scale for mean free path
 
-# Mask out invalid values (zero or infinity)
+# Mask out invalid values (nan or infinity)
 mask = ~(np.isinf(x) |
          np.isnan(x) |
          np.isinf(y) |
@@ -275,27 +272,30 @@ y = y[mask]
 z = z[mask]
 
 # Define radii in meters
-parsec_length = 3.086e16  # parsec
+# parsec_length = 3.086e16  # parsec
 light_year = 9.46e15  # light year
 solar_system_radius = 1.78e10  # Solar System radius (m)
 jupiter_radius = 69911e3  # Jupiter radius (m)
 jupiter_magnetosphere = 75 * jupiter_radius
 # Jupiter magnetosphere radius (m)
-moon_radius_average = 1930e3
-enceladus_radius = 3250e3  # Enceladus plume (m)
-tvashtar_plume = 300e3  # Tvashtar altitude (m)
-
+# moon_radius_average = 1930e3
+enceladus_radius = 500e3  # Enceladus plume (m)
+tvashtar_plume = 100e3  # Tvashtar altitude (m)
+enceladus_upper_depletion = 6300e3  # depletion zone
+# enceladus_lower_depletion = 1764e3  # depletion zone
 
 # List of (radius value, label, color) for diagonal lines
 radius_values = [
-    (parsec_length, '1 parsec (3.086e13 km)', 'red'),
+    # (parsec_length, '1 parsec (3.086e13 km)', 'red'),
     (light_year, '1 Light Year (9.46e12 km)', 'purple'),
     (solar_system_radius, 'Solar System Radius (1.78e7 km)', 'orange'),
     (jupiter_magnetosphere, 'Jupiter Magnetosphere (5.24e6 km)',
      'purple'),
-    (jupiter_radius, 'Jupiter Radius (6.99e4 km)', 'cyan'),
-    (enceladus_radius, 'Enceladus Plume (3.25e3 km)', 'pink'),
-    (moon_radius_average, 'Jupiter Moons Average R (1.93e3 km)', 'lime'),
+    # (jupiter_radius, 'Jupiter Radius (6.99e4 km)', 'cyan'),
+    (enceladus_upper_depletion, 'Enceladus depletion (6.30e3 km)', 'white'),
+    (enceladus_radius, 'Enceladus Plume (5e2 km)', 'pink'),
+    # (moon_radius_average, 'Jupiter Moons Average R (1.93e3 km)', 'lime'),
+    # (enceladus_lower_depletion, 'Enceladus depletion (1.74e3 km)', 'yellow'),
     (tvashtar_plume, 'Tvashtar Plume (3.00e2 km)', 'yellow')
 ]
 
@@ -390,7 +390,7 @@ add_shadow_region(X_IA, Y_IA, 'black')
 # Function to add labeled shadowed boxes
 def add_label_box(x_data, y_data, label, color):
     """Places a label box near the dataset."""
-    x_pos = np.median(x_data)  # Use median to find a representative position
+    x_pos = np.median(x_data)  # Use median to find a position for the label
     y_pos = np.median(y_data)
 
     ax.text(x_pos, y_pos, label, fontsize=10, color=color,
@@ -419,6 +419,7 @@ ax.set_yscale('log')
 ax.set_xlabel("Cross-Section Area (m²)", fontsize=14)
 ax.set_ylabel("Number Density (m⁻³)", fontsize=14)
 ax.set_title("Mean Free Path Variation Across Moons colormap", fontsize=18)
+ax.set_ylim(0, 10e8)
 
 # Add legend
 ax.legend(loc='lower left', fontsize=7.9, edgecolor='black')
@@ -429,7 +430,7 @@ plt.show()
 # Save the values from all_CSA and all_MFP into a text file
 with open("CSA_MFP_data.txt", "w") as file:
     file.write("# Cross-Section Area and Mean Free Path Data\n")
-    file.write("# Format: Origin | CSA (m²) | MFP (m)\n\n")
+    file.write("# Format: Origin | CSA (m²) | MFP (m)")
 
     datasets = [
         ("Europa Kruger", CSAEuK, MFPEuK),
