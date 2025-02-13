@@ -25,26 +25,31 @@ REnM = datasetEnM[0]
 ndensityEnM = datasetEnM[1]
 CSAEnM = []
 MFPEnM = []
+SBEnM = []
 
 RIA = datasetIA[0]
 ndensityIA = datasetIA[1]
 CSAIA = []
 MFPIA = []
+SBIA = []
 
 REnMo = datasetEnMo[0]
 ndensityEnMo = datasetEnMo[1]
 CSAEnMo = []
 MFPEnMo = []
+SBEnMo = []
 
 REnY = datasetEnY[0]
 ndensityEnY = datasetEnY[1]
 CSAEnY = []
 MFPEnY = []
+SBEnY = []
 
 REnS = datasetEnS[0]
 ndensityEnS = datasetEnS[1]
 CSAEnS = []
 MFPEnS = []
+SBEnS = []
 
 for i in range(0, len(ndensityEnM)):
     # For all the values of ndensity
@@ -54,12 +59,16 @@ for i in range(0, len(ndensityEnM)):
         CSAEnM.append(csa)  # Add CSA value to CSA list
         mfp = 1/(ndensityEnM[i]*csa)  # Calculate Mean Free Path value
         MFPEnM.append(mfp)  # Add MFP value to MFP list
+        sb = ((4*np.pi*(10**-7))*252e3*ndensityEnM[i]*150*1.6*(10**-19)*1200)/2
+        # calculate magnetic perturbation
+        SBEnM.append(sb)  # add sb value to SB list
 
 # Transform the above lists  in arrays
 REnM = np.array(REnM)
 CSAEnM = np.array(CSAEnM)
 MFPEnM = np.array(MFPEnM)
 ndensityEnM = np.array(ndensityEnM)
+SBEnM = np.array(SBEnM)
 
 # Process repeated for all datasets loaded
 for i in range(0, len(ndensityIA)):
@@ -68,11 +77,14 @@ for i in range(0, len(ndensityIA)):
         CSAIA.append(csa)
         mfp = 1/(ndensityIA[i]*csa)
         MFPIA.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3*ndensityIA[i]*150*1.6*(10**-19)*895)/2
+        SBIA.append(sb)
 
 RIA = np.array(RIA)
 CSAIA = np.array(CSAIA)
 MFPIA = np.array(MFPIA)
 ndensityIA = np.array(ndensityIA)
+SBIA = np.array(SBIA)
 
 for i in range(0, len(ndensityEnMo)):
     for j in range(0, len(REnMo)):
@@ -80,11 +92,15 @@ for i in range(0, len(ndensityEnMo)):
         CSAEnMo.append(csa)
         mfp = 1/(ndensityEnMo[i]*csa)
         MFPEnMo.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3 *
+              ndensityEnMo[i]*150*1.6*(10**-19)*14500)/2
+        SBEnMo.append(sb)
 
 REnMo = np.array(REnMo)
 CSAEnMo = np.array(CSAEnMo)
 MFPEnMo = np.array(MFPEnMo)
 ndensityEnMo = np.array(ndensityEnMo)
+SBEnMo = np.array(SBEnMo)
 
 for i in range(0, len(ndensityEnY)):
     for j in range(0, len(REnY)):
@@ -92,11 +108,14 @@ for i in range(0, len(ndensityEnY)):
         CSAEnY.append(csa)
         mfp = 1/(ndensityEnY[i]*csa)
         MFPEnY.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3*ndensityEnY[i]*150*1.6*(10**-19)*500)/2
+        SBEnY.append(sb)
 
 REnY = np.array(REnY)
 CSAEnY = np.array(CSAEnY)
 MFPEnY = np.array(MFPEnY)
 ndensityEnY = np.array(ndensityEnY)
+SBEnY = np.array(SBEnY)
 
 for i in range(0, len(ndensityEnS)):
     for j in range(0, len(REnS)):
@@ -104,11 +123,15 @@ for i in range(0, len(ndensityEnS)):
         CSAEnS.append(csa)
         mfp = 1/(ndensityEnS[i]*csa)
         MFPEnS.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3 *
+              ndensityEnS[i]*150*1.6*(10**-19)*12500)/2
+        SBEnS.append(sb)
 
 REnS = np.array(REnS)
 CSAEnS = np.array(CSAEnS)
 MFPEnS = np.array(MFPEnS)
 ndensityEnS = np.array(ndensityEnS)
+SBEnS = np.array(SBEnS)
 
 # Assign X and Y values for plotting
 X_EnM = CSAEnM
@@ -229,7 +252,8 @@ enceladus_plume_shafiq = 50e3
 radius_values = [
     (solar_system_radius, 'Solar System Radius (1.78e7 km)', 'orange'),
     (enceladus_upper_depletion, 'Enceladus depletion (6.30e3 km)', 'white'),
-    (enceladus_plume_yaroshenko, 'Enceladus Plume Yaroshenko (1.125e3 km)', 'lime'),
+    (enceladus_plume_yaroshenko, 'Enceladus Plume Yaroshenko'
+     ' (1.125e3 km)', 'lime'),
     (enceladus_plume_morooka, 'Enceladus Plume Morooka (7.50e2 km)', 'red'),
     (enceladus_radius, 'Enceladus Plume Meier (5.00e2 km)', 'cyan'),
     (tvashtar_plume, 'Tvashtar Plume (3.00e2 km)', 'yellow'),
@@ -357,22 +381,23 @@ plt.tight_layout()
 plt.show()
 
 # Save the values from all_CSA and all_MFP into a text file
-with open("CSA_MFP_data.txt", "w") as file:
+with open("CSA_MFP_SB_2_data.txt", "w") as file:
     file.write("# Cross-Section Area and Mean Free Path Data\n")
-    file.write("# Format: Origin | CSA (m²) | MFP (m)")
+    file.write("# Format: Origin | CSA (m²) | MFP (m) "
+               "| Magnetic perturbation (T)\n\n")
 
     datasets = [
-        ("Enceladus Meier", CSAEnM, MFPEnM),
-        ("Io Adeloye", CSAIA, MFPIA),
-        ("Enceladus Morooka", CSAEnMo, MFPEnMo),
-        ("Enceladus Yaroshenko", CSAEnY, MFPEnY),
-        ("Enceladus Shafiq", CSAEnS, MFPEnS)
+        ("Io Adeloye", CSAIA, MFPIA, SBIA),
+        ("Enceladus Meier", CSAEnM, MFPEnM, SBEnM),
+        ("Enceladus Morooka", CSAEnMo, MFPEnMo, SBEnMo),
+        ("Enceladus Yaroshenko", CSAEnY, MFPEnY, SBEnY),
+        ("Enceladus Shafiq", CSAEnS, MFPEnS, SBEnS)
     ]
 
-    for name, CSA_values, MFP_values in datasets:
+    for name, CSA_values, MFP_values, SB_values in datasets:
         file.write(f"# {name} Data\n")
-        for csa, mfp in zip(CSA_values, MFP_values):
-            file.write(f"{name} | {csa:.6e} | {mfp:.6e}\n")
+        for csa, mfp, sb in zip(CSA_values, MFP_values, SB_values):
+            file.write(f"{name} | {csa:.6e} | {mfp:.6e} | {sb:.6e}\n")
         file.write("\n")
 
-print("Data successfully saved to CSA_MFP_2_data.txt")
+print("Data successfully saved to CSA_MFP_SB_2_data.txt")
