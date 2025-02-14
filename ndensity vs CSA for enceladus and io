@@ -59,8 +59,8 @@ for i in range(0, len(ndensityEnM)):
         CSAEnM.append(csa)  # Add CSA value to CSA list
         mfp = 1/(ndensityEnM[i]*csa)  # Calculate Mean Free Path value
         MFPEnM.append(mfp)  # Add MFP value to MFP list
-        sb = ((4*np.pi*(10**-7))*252e3*ndensityEnM[i]*150*1.6*(10**-19)*1200)/2
         # calculate magnetic perturbation
+        sb = ((4*np.pi*(10**-7))*252e3*ndensityEnM[i]*150*1.6*(10**-19)*1200)/2
         SBEnM.append(sb)  # add sb value to SB list
 
 # Transform the above lists  in arrays
@@ -195,6 +195,7 @@ plt.title("Number Density vs Cross-Section Area for Dust")
 # Plot labels
 plt.xlabel("Cross-Section Area (m²)", fontsize=14)
 plt.ylabel("Number Density (m⁻³)", fontsize=14)
+ax.legend(loc='lower right', fontsize=7.91, edgecolor='black')
 
 # Create lists to contain all the combined data
 all_CSA = []
@@ -251,12 +252,13 @@ enceladus_plume_shafiq = 50e3
 # List of (radius value, label, color) for diagonal lines
 radius_values = [
     (solar_system_radius, 'Solar System Radius (1.78e7 km)', 'orange'),
-    (enceladus_upper_depletion, 'Enceladus depletion (6.30e3 km)', 'white'),
+    (enceladus_upper_depletion, 'Enceladus depletion Meier (6.30e3 km)',
+     'white'),
     (enceladus_plume_yaroshenko, 'Enceladus Plume Yaroshenko'
      ' (1.125e3 km)', 'lime'),
     (enceladus_plume_morooka, 'Enceladus Plume Morooka (7.50e2 km)', 'red'),
     (enceladus_radius, 'Enceladus Plume Meier (5.00e2 km)', 'cyan'),
-    (tvashtar_plume, 'Tvashtar Plume (3.00e2 km)', 'yellow'),
+    (tvashtar_plume, 'Tvashtar Plume Adeloye (3.00e2 km)', 'yellow'),
     (enceladus_plume_shafiq, 'Enceladus Plume Shafiq (50 km)', 'pink')
 ]
 
