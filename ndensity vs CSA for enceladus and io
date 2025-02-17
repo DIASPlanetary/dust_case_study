@@ -297,15 +297,15 @@ cbar.set_label("Mean Free Path (m)", fontsize=14)
 
 # Add scatterplot points with larger markers
 marker_size = 150  # Adjust marker size for better visibility
-ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015',
+ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015 (Plume)',
            marker='D', s=marker_size, color='white', edgecolor='green')
-ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025',
+ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025 (Modelled Plume)',
            marker='X', s=marker_size, color='white', edgecolor='yellow')
-ax.scatter(X_EnMo, Y_EnMo, label='Enceladus Morooka et al., 2011',
+ax.scatter(X_EnMo, Y_EnMo, label='Enceladus Morooka et al., 2011 (Plume)',
            marker='s', s=marker_size, color='white', edgecolor='green')
-ax.scatter(X_EnY, Y_EnY, label='Enceladus Yaroshenko et al., 2009',
+ax.scatter(X_EnY, Y_EnY, label='Enceladus Yaroshenko et al., 2009 (E-Ring)',
            marker='.', s=marker_size, color='white', edgecolor='green')
-ax.scatter(X_EnS, Y_EnS, label='Enceladus Shafiq et al., 2010',
+ax.scatter(X_EnS, Y_EnS, label='Enceladus Shafiq et al., 2010 (Plume)',
            marker='X', s=marker_size, color='white', edgecolor='green')
 
 
