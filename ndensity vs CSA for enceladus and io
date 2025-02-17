@@ -373,7 +373,7 @@ ax.set_xscale('log')
 ax.set_yscale('log')
 ax.set_xlabel("Cross-Section Area (m²)", fontsize=14)
 ax.set_ylabel("Number Density (m⁻³)", fontsize=14)
-ax.set_title("Mean Free Path Variation Across Moons colormap", fontsize=18)
+ax.set_title("Dust case study MFP variation colormap", fontsize=18)
 ax.set_ylim(50e3, 20e7)
 
 # Add legend
