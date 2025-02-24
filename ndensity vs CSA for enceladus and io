@@ -18,6 +18,9 @@ datasetIA = np.loadtxt('Io_adeloye_extremes.csv', delimiter=',').T
 datasetEnMo = np.loadtxt('Enceladus_morooka_data.csv', delimiter=',').T
 datasetEnY = np.loadtxt('Enceladus_yaroshenko_data.csv', delimiter=',').T
 datasetEnS = np.loadtxt('Enceladus_shafiq_data.csv', delimiter=',').T
+datasetEnE = np.loadtxt('Enceladus_ershova_data.csv', delimiter=',').T
+datasetEnK = np.loadtxt('Enceladus_kempf_data.csv', delimiter=',').T
+datasetEnW = np.loadtxt('Enceladus_waite_data.csv', delimiter=',').T
 
 # Assign the first column as Radius of the particle
 REnM = datasetEnM[0]
@@ -51,6 +54,24 @@ CSAEnS = []
 MFPEnS = []
 SBEnS = []
 
+REnE = datasetEnE[0]
+ndensityEnE = datasetEnE[1]
+CSAEnE = []
+MFPEnE = []
+SBEnE = []
+
+REnK = datasetEnK[0]
+ndensityEnK = datasetEnK[1]
+CSAEnK = []
+MFPEnK = []
+SBEnK = []
+
+REnW = datasetEnW[0]
+ndensityEnW = datasetEnW[1]
+CSAEnW = []
+MFPEnW = []
+SBEnW = []
+
 for i in range(0, len(ndensityEnM)):
     # For all the values of ndensity
     for j in range(0, len(REnM)):
@@ -77,7 +98,7 @@ for i in range(0, len(ndensityIA)):
         CSAIA.append(csa)
         mfp = 1/(ndensityIA[i]*csa)
         MFPIA.append(mfp)
-        sb = ((4*np.pi*(10**-7))*252e3*ndensityIA[i]*150*1.6*(10**-19)*895)/2
+        sb = ((4*np.pi*(10**-7))*1821e3*ndensityIA[i]*150*1.6*(10**-19)*895)/2
         SBIA.append(sb)
 
 RIA = np.array(RIA)
@@ -93,7 +114,7 @@ for i in range(0, len(ndensityEnMo)):
         mfp = 1/(ndensityEnMo[i]*csa)
         MFPEnMo.append(mfp)
         sb = ((4*np.pi*(10**-7))*252e3 *
-              ndensityEnMo[i]*150*1.6*(10**-19)*14500)/2
+              ndensityEnMo[i]*150*1.6*(10**-19)*500)/2
         SBEnMo.append(sb)
 
 REnMo = np.array(REnMo)
@@ -124,7 +145,7 @@ for i in range(0, len(ndensityEnS)):
         mfp = 1/(ndensityEnS[i]*csa)
         MFPEnS.append(mfp)
         sb = ((4*np.pi*(10**-7))*252e3 *
-              ndensityEnS[i]*150*1.6*(10**-19)*12500)/2
+              ndensityEnS[i]*150*1.6*(10**-19)*1000)/2
         SBEnS.append(sb)
 
 REnS = np.array(REnS)
@@ -133,17 +154,71 @@ MFPEnS = np.array(MFPEnS)
 ndensityEnS = np.array(ndensityEnS)
 SBEnS = np.array(SBEnS)
 
+for i in range(0, len(ndensityEnE)):
+    for j in range(0, len(REnE)):
+        csa = 4*3.14*(REnE[j]**2)
+        CSAEnE.append(csa)
+        mfp = 1/(ndensityEnE[i]*csa)
+        MFPEnE.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3 *
+              ndensityEnE[i]*150*1.6*(10**-19)*800)/2
+        SBEnE.append(sb)
+
+REnE = np.array(REnE)
+CSAEnE = np.array(CSAEnE)
+MFPEnE = np.array(MFPEnE)
+ndensityEnE = np.array(ndensityEnE)
+SBEnE = np.array(SBEnE)
+
+for i in range(0, len(ndensityEnK)):
+    for j in range(0, len(REnK)):
+        csa = 4*3.14*(REnK[j]**2)
+        CSAEnK.append(csa)
+        mfp = 1/(ndensityEnK[i]*csa)
+        MFPEnK.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3 *
+              ndensityEnK[i]*150*1.6*(10**-19)*500)/2
+        SBEnK.append(sb)
+
+REnK = np.array(REnK)
+CSAEnK = np.array(CSAEnK)
+MFPEnK = np.array(MFPEnK)
+ndensityEnK = np.array(ndensityEnK)
+SBEnK = np.array(SBEnK)
+
+for i in range(0, len(ndensityEnW)):
+    for j in range(0, len(REnW)):
+        csa = 4*3.14*(REnW[j]**2)
+        CSAEnW.append(csa)
+        mfp = 1/(ndensityEnW[i]*csa)
+        MFPEnW.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3 *
+              ndensityEnW[i]*150*1.6*(10**-19)*400)/2
+        SBEnW.append(sb)
+
+REnW = np.array(REnW)
+CSAEnW = np.array(CSAEnW)
+MFPEnW = np.array(MFPEnW)
+ndensityEnW = np.array(ndensityEnW)
+SBEnW = np.array(SBEnW)
+
 # Assign X and Y values for plotting
 X_EnM = CSAEnM
 X_IA = CSAIA
 X_EnMo = CSAEnMo
 X_EnY = CSAEnY
 X_EnS = CSAEnS
+X_EnE = CSAEnE
+X_EnK = CSAEnK
+X_EnW = CSAEnW
 Y_EnM = []
 Y_IA = []
 Y_EnMo = []
 Y_EnY = []
 Y_EnS = []
+Y_EnE = []
+Y_EnK = []
+Y_EnW = []
 
 # For each dataset, repeat the number density value,
 # to match the number of x values in each set
@@ -172,6 +247,21 @@ for m in range(0, 2):
 for m in range(2, 4):
     Y_EnS.append(ndensityEnS[1])
 
+for m in range(0, 2):
+    Y_EnE.append(ndensityEnE[0])
+for m in range(2, 4):
+    Y_EnE.append(ndensityEnE[1])
+
+for m in range(0, 2):
+    Y_EnK.append(ndensityEnK[0])
+for m in range(2, 4):
+    Y_EnK.append(ndensityEnK[1])
+
+for m in range(0, 2):
+    Y_EnW.append(ndensityEnW[0])
+for m in range(2, 4):
+    Y_EnW.append(ndensityEnW[1])
+
 # Plot the individual sets on a scatter plot
 fig, ax = plt.subplots()
 ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015',
@@ -184,6 +274,12 @@ ax.scatter(X_EnY, Y_EnY, label='Enceladus Yaroshenko et al., 2009',
            marker='.', color='g')
 ax.scatter(X_EnS, Y_EnS, label='Enceladus Shafiq et al., 2010',
            marker='X', color='g')
+ax.scatter(X_EnE, Y_EnE, label='Enceladus Ershova et al., 2024',
+           marker='H', color='g')
+ax.scatter(X_EnK, Y_EnK, label='Enceladus Kempf et al., 2010',
+           marker='^', color='g')
+ax.scatter(X_EnW, Y_EnW, label='Enceladus Waite et al., 2006',
+           marker='<', color='g')
 
 # To visualize all points easly, both axis are set with log scale
 ax.set_yscale('log')
@@ -195,7 +291,7 @@ plt.title("Number Density vs Cross-Section Area for Dust")
 # Plot labels
 plt.xlabel("Cross-Section Area (m²)", fontsize=14)
 plt.ylabel("Number Density (m⁻³)", fontsize=14)
-ax.legend(loc='lower right', fontsize=7.91, edgecolor='black')
+ax.legend(loc='lower left', fontsize=7.91, edgecolor='black')
 
 # Create lists to contain all the combined data
 all_CSA = []
@@ -208,7 +304,10 @@ for CSA, ndensity, MFP in [
     (CSAIA, ndensityIA, MFPIA),
     (CSAEnMo, ndensityEnMo, MFPEnMo),
     (CSAEnY, ndensityEnY, MFPEnY),
-    (CSAEnS, ndensityEnS, MFPEnS)
+    (CSAEnS, ndensityEnS, MFPEnS),
+    (CSAEnE, ndensityEnE, MFPEnE),
+    (CSAEnK, ndensityEnK, MFPEnK),
+    (CSAEnW, ndensityEnW, MFPEnW)
 ]:
     # Repeat ndensity to match CSA and MFP sizes
     repeated_ndensity = np.repeat(ndensity, len(CSA) // len(ndensity))
@@ -248,19 +347,25 @@ enceladus_upper_depletion = 6300e3  # depletion zone
 enceladus_plume_morooka = 750e3
 enceladus_plume_yaroshenko = 1125e3
 enceladus_plume_shafiq = 50e3
+enceladus_approach_ershova = 75e3
+enceladus_approach_kempf = 800e3
+enceladus_approach_waite = 1700e3
 
 # List of (radius value, label, color) for diagonal lines
 radius_values = [
     (solar_system_radius, 'Solar System Radius (1.78e7 km)', 'orange'),
-    (enceladus_upper_depletion, 'Enceladus depletion Meier (6.30e3 km)',
+    (enceladus_upper_depletion, 'Enceladus depletion Meier (6300 km)',
      'white'),
+    (enceladus_approach_waite, 'Enceladus Approach Waite (1700 km)', 'green'),
     (enceladus_plume_yaroshenko, 'Enceladus Plume Yaroshenko'
-     ' (1.125e3 km)', 'lime'),
-    (enceladus_plume_morooka, 'Enceladus Plume Morooka (7.50e2 km)', 'red'),
-    (enceladus_radius, 'Enceladus Plume Meier (5.00e2 km)', 'cyan'),
-    (tvashtar_plume, 'Tvashtar Plume Adeloye (3.00e2 km)', 'yellow'),
-    (enceladus_plume_shafiq, 'Enceladus Plume Shafiq (50 km)', 'pink')
-]
+     ' (1125 km)', 'lime'),
+    (enceladus_approach_kempf, 'Enceladus approach Kempf (800 km)', 'blue'),
+    (enceladus_plume_morooka, 'Enceladus Plume Morooka (750 km)', 'red'),
+    (enceladus_radius, 'Enceladus Plume Meier (500 km)', 'cyan'),
+    (tvashtar_plume, 'Tvashtar Plume Adeloye (300 km)', 'yellow'),
+    (enceladus_approach_ershova, 'Enceladus approach Ershova (75 km)',
+     'white'),
+    (enceladus_plume_shafiq, 'Enceladus Plume Shafiq (50 km)', 'pink')]
 
 # Define a grid for plotting with expanded edges
 x_margin = 0.1  # Margin as a fraction of the range
@@ -296,17 +401,23 @@ cbar = fig.colorbar(heatmap, ax=ax, pad=0.02)
 cbar.set_label("Mean Free Path (m)", fontsize=14)
 
 # Add scatterplot points with larger markers
-marker_size = 150  # Adjust marker size for better visibility
+marker_size = 165  # Adjust marker size for better visibility
 ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015 (Plume)',
            marker='D', s=marker_size, color='white', edgecolor='green')
 ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025 (Modelled Plume)',
            marker='X', s=marker_size, color='white', edgecolor='yellow')
 ax.scatter(X_EnMo, Y_EnMo, label='Enceladus Morooka et al., 2011 (Plume)',
-           marker='s', s=marker_size, color='white', edgecolor='green')
+           marker='^', s=marker_size, color='white', edgecolor='green')
 ax.scatter(X_EnY, Y_EnY, label='Enceladus Yaroshenko et al., 2009 (E-Ring)',
-           marker='.', s=marker_size, color='white', edgecolor='green')
+           marker='o', s=marker_size, color='white', edgecolor='green')
 ax.scatter(X_EnS, Y_EnS, label='Enceladus Shafiq et al., 2010 (Plume)',
-           marker='X', s=marker_size, color='white', edgecolor='green')
+           marker='p', s=marker_size, color='white', edgecolor='green'),
+ax.scatter(X_EnE, Y_EnE, label='Enceladus Ershova et al., 2024 (Plume)',
+           marker='H', s=marker_size, color='white', edgecolor='green')
+ax.scatter(X_EnK, Y_EnK, label='Enceladus Kempf et al., 2010 (Plume)',
+           marker='.', s=marker_size, color='white', edgecolor='green'),
+ax.scatter(X_EnW, Y_EnW, label='Enceladus Waite et al., 2006 (Plume)',
+           marker='<', s=marker_size, color='white', edgecolor='green')
 
 
 # Function to add a shadow around a dataset
@@ -342,26 +453,8 @@ add_shadow_region(X_IA, Y_IA, 'black')
 add_shadow_region(X_EnMo, Y_EnMo, 'black')
 add_shadow_region(X_EnY, Y_EnY, 'black')
 add_shadow_region(X_EnS, Y_EnS, 'black')
-
-
-# Function to add labeled shadowed boxes
-def add_label_box(x_data, y_data, label, color):
-    """Places a label box near the dataset."""
-    x_pos = np.median(x_data)  # Use median to find a position for the label
-    y_pos = np.median(y_data)
-
-    ax.text(x_pos, y_pos, label, fontsize=10, color=color,
-            ha='center', va='center',
-            bbox=dict(facecolor='white',
-                      edgecolor=color, boxstyle='round,pad=0.3', alpha=1))
-
-
-# Add boxes for each dataset
-add_label_box(X_EnM, Y_EnM, 'Enceladus Meier', 'black')
-add_label_box(X_IA, Y_IA, 'Io Adeloye', 'black')
-add_label_box(X_EnMo, Y_EnMo, 'Enceladus Morooka', 'black')
-add_label_box(X_EnY, Y_EnY, 'Enceladus Yaroshenko', 'black')
-add_label_box(X_EnS, Y_EnS, 'Enceladus Shafiq', 'black')
+add_shadow_region(X_EnE, Y_EnE, 'black')
+add_shadow_region(X_EnK, Y_EnK, 'black')
 
 # Add diagonal lines for each radius value
 for radius_value, label, line_color in radius_values:
@@ -374,10 +467,10 @@ ax.set_yscale('log')
 ax.set_xlabel("Cross-Section Area (m²)", fontsize=14)
 ax.set_ylabel("Number Density (m⁻³)", fontsize=14)
 ax.set_title("Dust case study MFP variation colormap", fontsize=18)
-ax.set_ylim(50e3, 20e7)
+ax.set_ylim(0.010, 20e7)
 
 # Add legend
-ax.legend(loc='lower right', fontsize=11, edgecolor='black')
+ax.legend(loc='upper right', fontsize=11, edgecolor='black')
 
 plt.tight_layout()
 plt.show()
@@ -393,8 +486,10 @@ with open("CSA_MFP_SB_2_data.txt", "w") as file:
         ("Enceladus Meier", CSAEnM, MFPEnM, SBEnM),
         ("Enceladus Morooka", CSAEnMo, MFPEnMo, SBEnMo),
         ("Enceladus Yaroshenko", CSAEnY, MFPEnY, SBEnY),
-        ("Enceladus Shafiq", CSAEnS, MFPEnS, SBEnS)
-    ]
+        ("Enceladus Shafiq", CSAEnS, MFPEnS, SBEnS),
+        ("Enceladus Ershova", CSAEnE, MFPEnE, SBEnE),
+        ("Enceladus Kempf", CSAEnK, MFPEnK, SBEnK),
+        ("Enceladus Waite", CSAEnW, MFPEnW, SBEnW)]
 
     for name, CSA_values, MFP_values, SB_values in datasets:
         file.write(f"# {name} Data\n")
