@@ -1,0 +1,469 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Mar  4 17:12:01 2025
+
+@author: march
+
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
+from scipy.interpolate import RBFInterpolator
+from scipy.spatial import ConvexHull
+
+# Load the datasets from the respective CSV files
+datasetEnM = np.loadtxt('Enceladus_meier_extremes.csv', delimiter=',').T
+datasetIA = np.loadtxt('Io_adeloye_extremes.csv', delimiter=',').T
+datasetEnMo = np.loadtxt('Enceladus_morooka_data.csv', delimiter=',').T
+datasetEnY = np.loadtxt('Enceladus_yaroshenko_data.csv', delimiter=',').T
+datasetEnS = np.loadtxt('Enceladus_shafiq_data.csv', delimiter=',').T
+datasetEnE = np.loadtxt('Enceladus_ershova_data.csv', delimiter=',').T
+datasetEnK = np.loadtxt('Enceladus_kempf_data.csv', delimiter=',').T
+datasetEnW = np.loadtxt('Enceladus_waite_data.csv', delimiter=',').T
+
+# Assign the first column as Radius of the particle
+REnM = datasetEnM[0]
+# Assign the second column as number density of particles
+ndensityEnM = datasetEnM[1]
+CSAEnM = []
+MFPEnM = []
+SBEnM = []
+
+RIA = datasetIA[0]
+ndensityIA = datasetIA[1]
+CSAIA = []
+MFPIA = []
+SBIA = []
+
+REnMo = datasetEnMo[0]
+ndensityEnMo = datasetEnMo[1]
+CSAEnMo = []
+MFPEnMo = []
+SBEnMo = []
+
+REnY = datasetEnY[0]
+ndensityEnY = datasetEnY[1]
+CSAEnY = []
+MFPEnY = []
+SBEnY = []
+
+REnS = datasetEnS[0]
+ndensityEnS = datasetEnS[1]
+CSAEnS = []
+MFPEnS = []
+SBEnS = []
+
+REnE = datasetEnE[0]
+ndensityEnE = datasetEnE[1]
+CSAEnE = []
+MFPEnE = []
+SBEnE = []
+
+REnK = datasetEnK[0]
+ndensityEnK = datasetEnK[1]
+CSAEnK = []
+MFPEnK = []
+SBEnK = []
+
+REnW = datasetEnW[0]
+ndensityEnW = datasetEnW[1]
+CSAEnW = []
+MFPEnW = []
+SBEnW = []
+
+for i in range(0, len(ndensityEnM)):
+    # For all the values of ndensity
+    for j in range(0, len(REnM)):
+        # For all the values of radius
+        csa = 4*3.14*(REnM[j]**2)  # Calculate Cross Section Area
+        CSAEnM.append(csa)  # Add CSA value to CSA list
+        mfp = 1/(ndensityEnM[i]*csa)  # Calculate Mean Free Path value
+        MFPEnM.append(mfp)  # Add MFP value to MFP list
+        # calculate magnetic perturbation
+        sb = ((4*np.pi*(10**-7))*252e3*ndensityEnM[i]*150*1.6*(10**-19)*1200)/2
+        SBEnM.append(sb)  # add sb value to SB list
+
+# Transform the above lists  in arrays
+REnM = np.array(REnM)
+CSAEnM = np.array(CSAEnM)
+MFPEnM = np.array(MFPEnM)
+ndensityEnM = np.array(ndensityEnM)
+SBEnM = np.array(SBEnM)
+
+# Process repeated for all datasets loaded
+for i in range(0, len(ndensityIA)):
+    for j in range(0, len(RIA)):
+        csa = 4*3.14*(RIA[j]**2)
+        CSAIA.append(csa)
+        mfp = 1/(ndensityIA[i]*csa)
+        MFPIA.append(mfp)
+        sb = ((4*np.pi*(10**-7))*1821e3*ndensityIA[i]*150*1.6*(10**-19)*895)/2
+        SBIA.append(sb)
+
+RIA = np.array(RIA)
+CSAIA = np.array(CSAIA)
+MFPIA = np.array(MFPIA)
+ndensityIA = np.array(ndensityIA)
+SBIA = np.array(SBIA)
+
+for i in range(0, len(ndensityEnMo)):
+    for j in range(0, len(REnMo)):
+        csa = 4*3.14*(REnMo[j]**2)
+        CSAEnMo.append(csa)
+        mfp = 1/(ndensityEnMo[i]*csa)
+        MFPEnMo.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3 *
+              ndensityEnMo[i]*150*1.6*(10**-19)*500)/2
+        SBEnMo.append(sb)
+
+REnMo = np.array(REnMo)
+CSAEnMo = np.array(CSAEnMo)
+MFPEnMo = np.array(MFPEnMo)
+ndensityEnMo = np.array(ndensityEnMo)
+SBEnMo = np.array(SBEnMo)
+
+for i in range(0, len(ndensityEnY)):
+    for j in range(0, len(REnY)):
+        csa = 4*3.14*(REnY[j]**2)
+        CSAEnY.append(csa)
+        mfp = 1/(ndensityEnY[i]*csa)
+        MFPEnY.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3*ndensityEnY[i]*150*1.6*(10**-19)*500)/2
+        SBEnY.append(sb)
+
+REnY = np.array(REnY)
+CSAEnY = np.array(CSAEnY)
+MFPEnY = np.array(MFPEnY)
+ndensityEnY = np.array(ndensityEnY)
+SBEnY = np.array(SBEnY)
+
+for i in range(0, len(ndensityEnS)):
+    for j in range(0, len(REnS)):
+        csa = 4*3.14*(REnS[j]**2)
+        CSAEnS.append(csa)
+        mfp = 1/(ndensityEnS[i]*csa)
+        MFPEnS.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3 *
+              ndensityEnS[i]*150*1.6*(10**-19)*1000)/2
+        SBEnS.append(sb)
+
+REnS = np.array(REnS)
+CSAEnS = np.array(CSAEnS)
+MFPEnS = np.array(MFPEnS)
+ndensityEnS = np.array(ndensityEnS)
+SBEnS = np.array(SBEnS)
+
+for i in range(0, len(ndensityEnE)):
+    for j in range(0, len(REnE)):
+        csa = 4*3.14*(REnE[j]**2)
+        CSAEnE.append(csa)
+        mfp = 1/(ndensityEnE[i]*csa)
+        MFPEnE.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3 *
+              ndensityEnE[i]*150*1.6*(10**-19)*800)/2
+        SBEnE.append(sb)
+
+REnE = np.array(REnE)
+CSAEnE = np.array(CSAEnE)
+MFPEnE = np.array(MFPEnE)
+ndensityEnE = np.array(ndensityEnE)
+SBEnE = np.array(SBEnE)
+
+for i in range(0, len(ndensityEnK)):
+    for j in range(0, len(REnK)):
+        csa = 4*3.14*(REnK[j]**2)
+        CSAEnK.append(csa)
+        mfp = 1/(ndensityEnK[i]*csa)
+        MFPEnK.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3 *
+              ndensityEnK[i]*150*1.6*(10**-19)*500)/2
+        SBEnK.append(sb)
+
+REnK = np.array(REnK)
+CSAEnK = np.array(CSAEnK)
+MFPEnK = np.array(MFPEnK)
+ndensityEnK = np.array(ndensityEnK)
+SBEnK = np.array(SBEnK)
+
+for i in range(0, len(ndensityEnW)):
+    for j in range(0, len(REnW)):
+        csa = 4*3.14*(REnW[j]**2)
+        CSAEnW.append(csa)
+        mfp = 1/(ndensityEnW[i]*csa)
+        MFPEnW.append(mfp)
+        sb = ((4*np.pi*(10**-7))*252e3 *
+              ndensityEnW[i]*150*1.6*(10**-19)*400)/2
+        SBEnW.append(sb)
+
+REnW = np.array(REnW)
+CSAEnW = np.array(CSAEnW)
+MFPEnW = np.array(MFPEnW)
+ndensityEnW = np.array(ndensityEnW)
+SBEnW = np.array(SBEnW)
+
+# Assign X and Y values for plotting
+X_EnM = CSAEnM
+X_IA = CSAIA
+X_EnMo = CSAEnMo
+X_EnY = CSAEnY
+X_EnS = CSAEnS
+X_EnE = CSAEnE
+X_EnK = CSAEnK
+X_EnW = CSAEnW
+Y_EnM = []
+Y_IA = []
+Y_EnMo = []
+Y_EnY = []
+Y_EnS = []
+Y_EnE = []
+Y_EnK = []
+Y_EnW = []
+
+# For each dataset, repeat the number density value,
+# to match the number of x values in each set
+for m in range(0, 2):
+    Y_EnM.append(ndensityEnM[0])
+for m in range(2, 4):
+    Y_EnM.append(ndensityEnM[1])
+
+for m in range(0, 2):
+    Y_IA.append(ndensityIA[0])
+for m in range(2, 4):
+    Y_IA.append(ndensityIA[1])
+
+for m in range(0, 2):
+    Y_EnMo.append(ndensityEnMo[0])
+for m in range(2, 4):
+    Y_EnMo.append(ndensityEnMo[1])
+
+for m in range(0, 2):
+    Y_EnY.append(ndensityEnY[0])
+for m in range(2, 4):
+    Y_EnY.append(ndensityEnY[1])
+
+for m in range(0, 2):
+    Y_EnS.append(ndensityEnS[0])
+for m in range(2, 4):
+    Y_EnS.append(ndensityEnS[1])
+
+for m in range(0, 2):
+    Y_EnE.append(ndensityEnE[0])
+for m in range(2, 4):
+    Y_EnE.append(ndensityEnE[1])
+
+for m in range(0, 2):
+    Y_EnK.append(ndensityEnK[0])
+for m in range(2, 4):
+    Y_EnK.append(ndensityEnK[1])
+
+for m in range(0, 2):
+    Y_EnW.append(ndensityEnW[0])
+for m in range(2, 4):
+    Y_EnW.append(ndensityEnW[1])
+
+# Plot the individual sets on a scatter plot
+fig, ax = plt.subplots()
+ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015',
+           marker='D', color='g')
+ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025',
+           marker='x', color='y')
+ax.scatter(X_EnMo, Y_EnMo, label='Enceladus Morooka et al., 2011',
+           marker='s', color='g')
+ax.scatter(X_EnY, Y_EnY, label='Enceladus Yaroshenko et al., 2009',
+           marker='.', color='g')
+ax.scatter(X_EnS, Y_EnS, label='Enceladus Shafiq et al., 2010',
+           marker='X', color='g')
+ax.scatter(X_EnE, Y_EnE, label='Enceladus Ershova et al., 2024',
+           marker='H', color='g')
+ax.scatter(X_EnK, Y_EnK, label='Enceladus Kempf et al., 2010',
+           marker='^', color='g')
+ax.scatter(X_EnW, Y_EnW, label='Enceladus Waite et al., 2006',
+           marker='<', color='g')
+
+# To visualize all points easly, both axis are set with log scale
+ax.set_yscale('log')
+ax.set_xscale('log')
+
+# Plot title
+plt.title("Number Density vs Cross-Section Area for Dust")
+
+# Plot labels
+plt.xlabel("Cross-Section Area (m²)", fontsize=14)
+plt.ylabel("Number Density (m⁻³)", fontsize=14)
+ax.legend(loc='lower left', fontsize=7.91, edgecolor='black')
+
+# Create lists to contain all the combined data
+all_CSA = []
+all_ndensity = []
+all_SB = []
+
+# Process each dataset, ensuring alignment of CSA, ndensity, and MFP
+for CSA, ndensity, SB in [
+    (CSAEnM, ndensityEnM, SBEnM),
+    (CSAIA, ndensityIA, SBIA),
+    (CSAEnMo, ndensityEnMo, SBEnMo),
+    (CSAEnY, ndensityEnY, SBEnY),
+    (CSAEnS, ndensityEnS, SBEnS),
+    (CSAEnE, ndensityEnE, SBEnE),
+    (CSAEnK, ndensityEnK, SBEnK),
+    (CSAEnW, ndensityEnW, SBEnW)
+]:
+    # Repeat ndensity to match CSA and MFP sizes
+    repeated_ndensity = np.repeat(ndensity, len(CSA) // len(ndensity))
+
+    # Append to the combined lists
+    all_CSA.extend(CSA)
+    all_ndensity.extend(repeated_ndensity)
+    all_SB.extend(SB)
+
+# Convert lists to numpy arrays
+all_CSA = np.array(all_CSA)
+all_ndensity = np.array(all_ndensity)
+all_SB = np.array(all_SB)
+
+# Define a grid for the background
+x = np.log10(all_CSA)  # Log scale for cross-sectional area
+y = np.log10(all_ndensity)  # Log scale for number density
+z = np.log10(all_SB*(10**9))  # Log scale for mean free path
+
+# Mask out invalid values (nan or infinity)
+mask = ~(np.isinf(x) |
+         np.isnan(x) |
+         np.isinf(y) |
+         np.isnan(y) |
+         np.isinf(z) |
+         np.isnan(z))
+
+x = x[mask]
+y = y[mask]
+z = z[mask]
+
+
+# Define a grid for plotting with expanded edges
+x_margin = 0.1  # Margin as a fraction of the range
+y_margin = 0.1
+x_range = x.max() - x.min()
+y_range = y.max() - y.min()
+
+x_grid = np.linspace(x.min() - x_margin * x_range,
+                     x.max() + x_margin * x_range, 200)
+y_grid = np.linspace(y.min() - y_margin * y_range,
+                     y.max() + y_margin * y_range, 200)
+X_grid, Y_grid = np.meshgrid(x_grid, y_grid)
+
+# Interpolate the data using RBFInterpolator
+points = np.vstack((x, y)).T
+rbf = RBFInterpolator(points, z, kernel='linear', epsilon=1)
+Z_grid = rbf(np.vstack((X_grid.ravel(),
+                        Y_grid.ravel())).T).reshape(X_grid.shape)
+
+# Plot the heatmap with pcolormesh
+fig, ax = plt.subplots(figsize=(12, 10))
+heatmap = ax.pcolormesh(
+    10**x_grid, 10**y_grid,
+    10**Z_grid,  # Convert back from log scale for axes and color
+    cmap='plasma',
+    norm=LogNorm(vmin=10**z.min(),
+                 vmax=10**z.max()),  # Logarithmic color scaling
+    shading='auto'  # Avoid grid artifacts
+)
+
+# Add a colorbar
+cbar = fig.colorbar(heatmap, ax=ax, pad=0.02)
+cbar.set_label("Magnetic perturbation (nT)", fontsize=14)
+
+# Add scatterplot points with larger markers
+marker_size = 165  # Adjust marker size for better visibility
+ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015 (Plume)',
+           marker='D', s=marker_size, color='white', edgecolor='green')
+ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025 (Modelled Plume)',
+           marker='X', s=marker_size, color='white', edgecolor='yellow')
+ax.scatter(X_EnMo, Y_EnMo, label='Enceladus Morooka et al., 2011 (Plume)',
+           marker='^', s=marker_size, color='white', edgecolor='green')
+ax.scatter(X_EnY, Y_EnY, label='Enceladus Yaroshenko et al., 2009 (E-Ring)',
+           marker='o', s=marker_size, color='white', edgecolor='green')
+ax.scatter(X_EnS, Y_EnS, label='Enceladus Shafiq et al., 2010 (Plume)',
+           marker='p', s=marker_size, color='white', edgecolor='green'),
+ax.scatter(X_EnE, Y_EnE, label='Enceladus Ershova et al., 2024 (Plume)',
+           marker='H', s=marker_size, color='white', edgecolor='green')
+ax.scatter(X_EnK, Y_EnK, label='Enceladus Kempf et al., 2010 (Plume)',
+           marker='.', s=marker_size, color='white', edgecolor='green'),
+ax.scatter(X_EnW, Y_EnW, label='Enceladus Waite et al., 2006 (Plume)',
+           marker='<', s=marker_size, color='white', edgecolor='green')
+
+
+# Function to add a shadow around a dataset
+def add_shadow_region(x_data, y_data, color, alpha=0.4):
+    # Draws a shadow around a dataset using Convex Hull if possible.
+    x_data, y_data = np.array(x_data), np.array(y_data)
+
+    # Convert to log scale, handling zeros
+    x_data = np.where(x_data > 0, np.log10(x_data), np.nan)
+    y_data = np.where(y_data > 0, np.log10(y_data), np.nan)
+
+    # Ensure unique points for ConvexHull
+    unique_points = np.column_stack((x_data, y_data))
+    unique_points = np.unique(unique_points, axis=0)
+
+    # ConvexHull requires at least 3 unique points
+    if unique_points.shape[0] >= 3:
+        try:
+            hull = ConvexHull(unique_points)
+            hull_x = 10**unique_points[hull.vertices, 0]
+            # Convert back from log scale
+            hull_y = 10**unique_points[hull.vertices, 1]
+            ax.fill(hull_x, hull_y, color=color, alpha=alpha, linewidth=0)
+        except Exception as e:
+            print(f"ConvexHull error: {e}")  # Debugging
+    else:
+        print("o")
+
+
+# Apply shadowed regions to each dataset
+add_shadow_region(X_EnM, Y_EnM, 'black')
+add_shadow_region(X_IA, Y_IA, 'black')
+add_shadow_region(X_EnMo, Y_EnMo, 'black')
+add_shadow_region(X_EnY, Y_EnY, 'black')
+add_shadow_region(X_EnS, Y_EnS, 'black')
+add_shadow_region(X_EnE, Y_EnE, 'black')
+add_shadow_region(X_EnK, Y_EnK, 'black')
+
+
+# Set plot labels, scales, and title
+ax.set_xscale('log')
+ax.set_yscale('log')
+ax.set_xlabel("Cross-Section Area (m²)", fontsize=14)
+ax.set_ylabel("Number Density (m⁻³)", fontsize=14)
+ax.set_title("Dust case study Magnetic perturbation colormap", fontsize=18)
+ax.set_ylim(0.010, 20e7)
+
+# Add legend
+ax.legend(loc='upper right', fontsize=11, edgecolor='black')
+
+plt.tight_layout()
+plt.show()
+
+# Save the values from all_CSA and all_MFP into a text file
+with open("CSA_MFP_SB_2_data.txt", "w") as file:
+    file.write("# Cross-Section Area and Mean Free Path Data\n")
+    file.write("# Format: Origin | CSA (m²) | MFP (m) "
+               "| Magnetic perturbation (T)\n\n")
+
+    datasets = [
+        ("Io Adeloye", CSAIA, MFPIA, SBIA),
+        ("Enceladus Meier", CSAEnM, MFPEnM, SBEnM),
+        ("Enceladus Morooka", CSAEnMo, MFPEnMo, SBEnMo),
+        ("Enceladus Yaroshenko", CSAEnY, MFPEnY, SBEnY),
+        ("Enceladus Shafiq", CSAEnS, MFPEnS, SBEnS),
+        ("Enceladus Ershova", CSAEnE, MFPEnE, SBEnE),
+        ("Enceladus Kempf", CSAEnK, MFPEnK, SBEnK),
+        ("Enceladus Waite", CSAEnW, MFPEnW, SBEnW)]
+
+    for name, CSA_values, MFP_values, SB_values in datasets:
+        file.write(f"# {name} Data\n")
+        for csa, mfp, sb in zip(CSA_values, MFP_values, SB_values):
+            file.write(f"{name} | {csa:.6e} | {mfp:.6e} | {sb:.6e}\n")
+        file.write("\n")
+
+print("Data successfully saved to CSA_MFP_SB_2_data.txt")
