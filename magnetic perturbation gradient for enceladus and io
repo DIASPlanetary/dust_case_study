@@ -376,21 +376,21 @@ cbar.set_label("Magnetic perturbation (nT)", fontsize=14)
 # Add scatterplot points with larger markers
 marker_size = 165  # Adjust marker size for better visibility
 ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015 (Plume)',
-           marker='D', s=marker_size, color='white', edgecolor='green')
+           marker='D', s=marker_size, color='green', edgecolor='white)
 ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025 (Modelled Plume)',
-           marker='X', s=marker_size, color='white', edgecolor='yellow')
+           marker='X', s=marker_size, color='orange', edgecolor='white')
 ax.scatter(X_EnMo, Y_EnMo, label='Enceladus Morooka et al., 2011 (Plume)',
-           marker='^', s=marker_size, color='white', edgecolor='green')
+           marker='^', s=marker_size, color='green', edgecolor='white)
 ax.scatter(X_EnY, Y_EnY, label='Enceladus Yaroshenko et al., 2009 (E-Ring)',
-           marker='o', s=marker_size, color='white', edgecolor='green')
+           marker='o', s=marker_size, color='green', edgecolor='white)
 ax.scatter(X_EnS, Y_EnS, label='Enceladus Shafiq et al., 2010 (Plume)',
-           marker='p', s=marker_size, color='white', edgecolor='green'),
+           marker='p', s=marker_size, color='green', edgecolor='white),
 ax.scatter(X_EnE, Y_EnE, label='Enceladus Ershova et al., 2024 (Plume)',
-           marker='H', s=marker_size, color='white', edgecolor='green')
+           marker='H', s=marker_size, color='green', edgecolor='white)
 ax.scatter(X_EnK, Y_EnK, label='Enceladus Kempf et al., 2010 (Plume)',
-           marker='.', s=marker_size, color='white', edgecolor='green'),
+           marker='.', s=marker_size, color='green', edgecolor='white),
 ax.scatter(X_EnW, Y_EnW, label='Enceladus Waite et al., 2006 (Plume)',
-           marker='<', s=marker_size, color='white', edgecolor='green')
+           marker='<', s=marker_size, color='green', edgecolor='white')
 
 
 # Function to add a shadow around a dataset
