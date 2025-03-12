@@ -28,8 +28,8 @@ datasetCK = np.loadtxt('Callisto_kruger_extremes.csv', delimiter=',').T
 datasetIM = np.loadtxt('Io_mcdoniel_extremes.csv', delimiter=',').T
 datasetEuS = np.loadtxt('Europa_south_extremes.csv', delimiter=',').T
 datasetEnM = np.loadtxt('Enceladus_meier_extremes.csv', delimiter=',').T
-datasetEnMo = np.loadtxt('Enceladus_morooka_data.csv', delimiter=',').T
 datasetIA = np.loadtxt('Io_adeloye_extremes.csv', delimiter=',').T
+datasetEnMo = np.loadtxt('Enceladus_morooka_data.csv', delimiter=',').T
 
 # Assign the first column as Radius of the particle
 REuK = datasetEuK[0]
@@ -37,19 +37,16 @@ REuK = datasetEuK[0]
 ndensityEuK = datasetEuK[1]
 CSAEuK = []
 MFPEuK = []
-SBEuK = []
 
 RIK = datasetIK[0]
 ndensityIK = datasetIK[1]
 CSAIK = []
 MFPIK = []
-SBIK = []
 
 RCK = datasetCK[0]
 ndensityCK = datasetCK[1]
 CSACK = []
 MFPCK = []
-SBCK = []
 
 RIM = datasetIM[0]
 ndensityIM = datasetIM[1]
@@ -60,7 +57,6 @@ REuS = datasetEuS[0]
 ndensityEuS = datasetEuS[1]
 CSAEuS = []
 MFPEuS = []
-SBEuS = []
 
 REnM = datasetEnM[0]
 ndensityEnM = datasetEnM[1]
@@ -85,16 +81,12 @@ for i in range(0, len(ndensityEuK)):
         CSAEuK.append(csa)  # Add CSA value to CSA list
         mfp = 1/(ndensityEuK[i]*csa)  # Calculate Mean Free Path value
         MFPEuK.append(mfp)  # Add MFP value to MFP list
-        sb = ((4*np.pi*(10**-7))*1560e3*ndensityEuK[i]
-              * 150*1.6*(10**-19)*5500)/2
-        SBEuK.append(sb)  # add sb value to SB list
 
 # Transform the above lists  in arrays
 REuK = np.array(REuK)
 CSAEuK = np.array(CSAEuK)
 MFPEuK = np.array(MFPEuK)
 ndensityEuK = np.array(ndensityEuK)
-SBEuK = np.array(SBEuK)
 
 # Process repeated for all datasets loaded
 for i in range(0, len(ndensityIK)):
@@ -103,15 +95,11 @@ for i in range(0, len(ndensityIK)):
         CSAIK.append(csa)
         mfp = 1/(ndensityIK[i]*csa)
         MFPIK.append(mfp)
-        sb = ((4*np.pi*(10**-7))*1821e3*ndensityIK[i]
-              * 150*1.6*(10**-19)*10300)/2
-        SBIK.append(sb)  # add sb value to SB list
 
 RIK = np.array(RIK)
 CSAIK = np.array(CSAIK)
 MFPIK = np.array(MFPIK)
 ndensityIK = np.array(ndensityIK)
-SBIK = np.array(SBIK)
 
 for i in range(0, len(ndensityCK)):
     for j in range(0, len(RCK)):
@@ -119,15 +107,11 @@ for i in range(0, len(ndensityCK)):
         CSACK.append(csa)
         mfp = 1/(ndensityCK[i]*csa)
         MFPCK.append(mfp)
-        sb = ((4*np.pi*(10**-7))*2410e3*ndensityCK[i]
-              * 150*1.6*(10**-19)*6300)/2
-        SBCK.append(sb)  # add sb value to SB list
 
 RCK = np.array(RCK)
 CSACK = np.array(CSACK)
 MFPCK = np.array(MFPCK)
 ndensitCK = np.array(ndensityCK)
-SBCK = np.array(SBCK)
 
 for i in range(0, len(ndensityIM)):
     for j in range(0, len(RIM)):
@@ -147,15 +131,11 @@ for i in range(0, len(ndensityEuS)):
         CSAEuS.append(csa)
         mfp = 1/(ndensityEuS[i]*csa)
         MFPEuS.append(mfp)
-        sb = ((4*np.pi*(10**-7))*1560e3*ndensityEuS[i]
-              * 150*1.6*(10**-19)*700)/2
-        SBEuS.append(sb)  # add sb value to SB list
 
 REuS = np.array(REuS)
 CSAEuS = np.array(CSAEuS)
 MFPEuS = np.array(MFPEuS)
 ndensityEuS = np.array(ndensityEuS)
-SBEuS = np.array(SBEuS)
 
 for i in range(0, len(ndensityEnM)):
     for j in range(0, len(REnM)):
@@ -258,17 +238,17 @@ fig, ax = plt.subplots()
 ax.scatter(X_EuK, Y_EuK, label='Europa Kruger et al., 2003',
            marker='.', color='b')
 ax.scatter(X_IK, Y_IK, label='Io Kruger et al., 2003',
-           marker='.', color='orange')
+           marker='.', color='y')
 ax.scatter(X_CK, Y_CK, label='Callisto Kruger et al., 2003',
            marker='.', color='r')
 ax.scatter(X_IM, Y_IM, label='Io McDoniel et al., 2015',
-           marker='s', color='orange')
+           marker='s', color='y')
 ax.scatter(X_EuS, Y_EuS, label='Europa Southworth et al., 2015',
            marker='^', color='b')
 ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015',
            marker='D', color='g')
 ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025',
-           marker='x', color='orange')
+           marker='x', color='y')
 
 # To visualize all points easly, both axis are set with log scale
 ax.set_yscale('log')
@@ -294,8 +274,8 @@ for CSA, ndensity, MFP in [
     (CSAIM, ndensityIM, MFPIM),
     (CSAEuS, ndensityEuS, MFPEuS),
     (CSAEnM, ndensityEnM, MFPEnM),
-    (CSAEnMo, ndensityEnMo, MFPEnMo),
     (CSAIA, ndensityIA, MFPIA),
+    (CSAEnMo, ndensityEnMo, MFPEnMo)
 ]:
     # Repeat ndensity to match CSA and MFP sizes
     repeated_ndensity = np.repeat(ndensity, len(CSA) // len(ndensity))
@@ -327,6 +307,26 @@ x = x[mask]
 y = y[mask]
 z = z[mask]
 
+# Define radii in meters
+# parsec_length = 3.086e16  # parsec
+light_year = 9.46e15  # light year
+solar_system_radius = 1.78e10  # Solar System radius (m)
+io_kruger = 892e3
+cal_kruger = 415e3
+tvashtar_plume = 300e3  # Tvashtar altitude (m)
+en_mo_plume = 750e3
+eu_kruger = 201e3
+
+# List of (radius value, label, color) for diagonal lines
+radius_values = [
+    (light_year, '1 Light Year (9.46e12 km)', 'black'),
+    (solar_system_radius, 'Solar System Radius (1.78e7 km)', 'orange'),
+    (io_kruger, 'Io Kruger Closest Approach (892 km)', 'blue'),
+    (en_mo_plume, 'Enceladus Morooka Plume (750 km)', 'yellow'),
+    (cal_kruger, 'Callisto Kruger Closest Approach (415 km)', 'cyan'),
+    (tvashtar_plume, 'Io Adeloye Plume (300 km)', 'green'),
+    (eu_kruger, 'Europa Kruger Closest Approach (201 km)', 'pink')
+]
 
 # Define a grid for plotting with expanded edges
 x_margin = 0.1  # Margin as a fraction of the range
@@ -346,9 +346,6 @@ rbf = RBFInterpolator(points, z, kernel='linear', epsilon=1)
 Z_grid = rbf(np.vstack((X_grid.ravel(),
                         Y_grid.ravel())).T).reshape(X_grid.shape)
 
-values = [201e3, 300e3, 415e3, 892e3, 1.78e10, 9.46e15]
-valueslog = np.log10(values)
-
 # Plot the heatmap with pcolormesh
 fig, ax = plt.subplots(figsize=(12, 10))
 heatmap = ax.pcolormesh(
@@ -359,14 +356,6 @@ heatmap = ax.pcolormesh(
                  vmax=10**z.max()),  # Logarithmic color scaling
     shading='auto'  # Avoid grid artifacts
 )
-
-# Add contour lines
-contour_levels = np.logspace(np.floor(z.min()), np.ceil(z.max()), num=10)
-contours = ax.contour(
-    10**X_grid, 10**Y_grid, Z_grid,
-    levels=valueslog, colors='white', linewidths=1
-)
-# ax.clabel(contours, inline=True, fontsize=10, fmt="%.1f m")
 
 # Add a colorbar
 cbar = fig.colorbar(heatmap, ax=ax, pad=0.02)
@@ -398,7 +387,7 @@ plt.plot(pxEnMo, pyEnMo, 'black')
 
 
 # Function to add a shadow around a dataset
-def add_shadow_region(x_data, y_data, color, alpha=0.5):
+def add_shadow_region(x_data, y_data, color, alpha=0.4):
     # Draws a shadow around a dataset using Convex Hull if possible.
     x_data, y_data = np.array(x_data), np.array(y_data)
 
@@ -455,6 +444,10 @@ add_label_box(X_EuS, Y_EuS, 'Europa Southworth', 'black')
 add_label_box(X_EnM, Y_EnM, 'Enceladus Meier', 'black')
 add_label_box(X_IA, Y_IA, 'Io Adeloye', 'black')
 
+# Add diagonal lines for each radius value
+for radius_value, label, line_color in radius_values:
+    y_diagonal = 1 / (radius_value * 10**x_grid)
+    ax.plot(10**x_grid, y_diagonal, '--', color=line_color, lw=2, label=label)
 
 # Set plot labels, scales, and title
 ax.set_xscale('log')
@@ -465,7 +458,7 @@ ax.set_title("Mean Free Path Variation Across Moons colormap", fontsize=18)
 ax.set_ylim(0, 10e8)
 
 # Add legend
-ax.legend(loc='lower left', fontsize=10.9, edgecolor='black')
+ax.legend(loc='lower left', fontsize=7.9, edgecolor='black')
 
 plt.tight_layout()
 plt.show()
@@ -482,6 +475,7 @@ with open("CSA_MFP_data.txt", "w") as file:
         ("Io McDoniel", CSAIM, MFPIM),
         ("Europa Southworth", CSAEuS, MFPEuS),
         ("Enceladus Meier", CSAEnM, MFPEnM),
+        ("Enceladus Morooka", CSAEnMo, MFPEnMo),
         ("Io Adeloye", CSAIA, MFPIA)
     ]
 
@@ -492,24 +486,3 @@ with open("CSA_MFP_data.txt", "w") as file:
         file.write("\n")
 
 print("Data successfully saved to CSA_MFP_data.txt")
-
-# Save the values from all_CSA and all_MFP into a text file
-with open("CSA_MFP_SB_addition_data.txt", "w") as file:
-    file.write("# Cross-Section Area and Mean Free Path Data\n")
-    file.write("# Format: Origin | CSA (m²) | MFP (m) "
-               "| Magnetic perturbation (T)\n\n")
-
-    datasets = [
-        ("Europa Kruger", CSAEuK, MFPEuK, SBEuK),
-        ("Callisto Kruger", CSACK, MFPCK, SBCK),
-        ("Io Kruger", CSAIK, MFPIK, SBIK),
-        ("Europa Southworth", CSAEuS, MFPEuS, SBEuS)
-    ]
-
-    for name, CSA_values, MFP_values, SB_values in datasets:
-        file.write(f"# {name} Data\n")
-        for csa, mfp, sb in zip(CSA_values, MFP_values, SB_values):
-            file.write(f"{name} | {csa:.6e} | {mfp:.6e} | {sb:.6e}\n")
-        file.write("\n")
-
-print("Data successfully saved to CSA_MFP_SB_addition_data.txt")
