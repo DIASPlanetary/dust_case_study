@@ -21,6 +21,21 @@ def clean_array(arr):
     return arr[mask]
 
 
+def data_processing(radius, density, velocity, radius_m):
+    CSA = []
+    MFP = []
+    SB = []
+    for i in range(0, len(density)):
+        for j in range(0, len(radius)):
+            csa = 4*np.pi*(radius[j]**2)
+            CSA.append(csa)
+            mfp = 1/(density[i]*csa)
+            MFP.append(mfp)
+            sb = (mu0*radius_m*density[i]*150*elec*velocity)/2
+            SB.append(sb)
+    return CSA, MFP, SB
+
+
 # Load the datasets from the respective CSV files
 datasetEnM = np.loadtxt('Enceladus_meier_extremes.csv', delimiter=',').T
 datasetIA = np.loadtxt('Io_adeloye_extremes.csv', delimiter=',').T
@@ -31,6 +46,10 @@ datasetEnS = np.loadtxt('Enceladus_shafiq_data.csv', delimiter=',').T
 datasetEnE = np.loadtxt('Enceladus_ershova_data.csv', delimiter=',').T
 datasetEnK = np.loadtxt('Enceladus_kempf_data.csv', delimiter=',').T
 datasetEnW = np.loadtxt('Enceladus_waite_data.csv', delimiter=',').T
+
+mu0 = 4*np.pi*(10**-7)
+elec = 1.6*(10**-19)
+
 
 # Assign the first column as Radius of the particle
 REnM = datasetEnM[0]
@@ -88,17 +107,16 @@ CSAEnW = []
 MFPEnW = []
 SBEnW = []
 
-for i in range(0, len(ndensityEnM)):
-    # For all the values of ndensity
-    for j in range(0, len(REnM)):
-        # For all the values of radius
-        csa = 4*3.14*(REnM[j]**2)  # Calculate Cross Section Area
-        CSAEnM.append(csa)  # Add CSA value to CSA list
-        mfp = 1/(ndensityEnM[i]*csa)  # Calculate Mean Free Path value
-        MFPEnM.append(mfp)  # Add MFP value to MFP list
-        # calculate magnetic perturbation
-        sb = ((4*np.pi*(10**-7))*252e3*ndensityEnM[i]*150*1.6*(10**-19)*1200)/2
-        SBEnM.append(sb)  # add sb value to SB list
+CSAEnM, MFPEnM, SBEnM = data_processing(REnM, ndensityEnM, 252e3, 1200)
+CSAEnMo, MFPEnMo, SBEnMo = data_processing(REnMo, ndensityEnMo, 252e3, 500)
+CSAEuS, MFPEuS, SBEuS = data_processing(REuS, ndensityEuS, 1560e3, 700)
+CSAIA, MFPIA, SBIA = data_processing(RIA, ndensityIA, 1821e3, 895)
+CSAEnY, MFPEnY, SBEnY = data_processing(REnY, ndensityEnY, 252e3, 500)
+CSAEnS, MFPEnS, SBEnS = data_processing(REnS, ndensityEnS, 252e3, 1000)
+CSAEnE, MFPEnE, SBEnE = data_processing(REnE, ndensityEnE, 252e3, 800)
+CSAEnK, MFPEnK, SBEnK = data_processing(REnK, ndensityEnK, 252e3, 500)
+CSAEnW, MFPEnW, SBEnW = data_processing(REnW, ndensityEnW, 252e3, 400)
+
 
 # Transform the above lists  in arrays
 REnM = np.array(REnM)
@@ -107,31 +125,11 @@ MFPEnM = np.array(MFPEnM)
 ndensityEnM = np.array(ndensityEnM)
 SBEnM = np.array(SBEnM)
 
-# Process repeated for all datasets loaded
-for i in range(0, len(ndensityIA)):
-    for j in range(0, len(RIA)):
-        csa = 4*3.14*(RIA[j]**2)
-        CSAIA.append(csa)
-        mfp = 1/(ndensityIA[i]*csa)
-        MFPIA.append(mfp)
-        sb = ((4*np.pi*(10**-7))*1821e3*ndensityIA[i]*150*1.6*(10**-19)*895)/2
-        SBIA.append(sb)
-
 RIA = np.array(RIA)
 CSAIA = np.array(CSAIA)
 MFPIA = np.array(MFPIA)
 ndensityIA = np.array(ndensityIA)
 SBIA = np.array(SBIA)
-
-for i in range(0, len(ndensityEuS)):
-    for j in range(0, len(REuS)):
-        csa = 4*3.14*(REuS[j]**2)
-        CSAEuS.append(csa)
-        mfp = 1/(ndensityEuS[i]*csa)
-        MFPEuS.append(mfp)
-        sb = ((4*np.pi*(10**-7))*1560e3*ndensityEuS[i]
-              * 150*1.6*(10**-19)*700)/2
-        SBEuS.append(sb)  # add sb value to SB list
 
 REuS = np.array(REuS)
 CSAEuS = np.array(CSAEuS)
@@ -139,30 +137,11 @@ MFPEuS = np.array(MFPEuS)
 ndensityEuS = np.array(ndensityEuS)
 SBEuS = np.array(SBEuS)
 
-for i in range(0, len(ndensityEnMo)):
-    for j in range(0, len(REnMo)):
-        csa = 4*3.14*(REnMo[j]**2)
-        CSAEnMo.append(csa)
-        mfp = 1/(ndensityEnMo[i]*csa)
-        MFPEnMo.append(mfp)
-        sb = ((4*np.pi*(10**-7))*252e3 *
-              ndensityEnMo[i]*150*1.6*(10**-19)*500)/2
-        SBEnMo.append(sb)
-
 REnMo = np.array(REnMo)
 CSAEnMo = np.array(CSAEnMo)
 MFPEnMo = np.array(MFPEnMo)
 ndensityEnMo = np.array(ndensityEnMo)
 SBEnMo = np.array(SBEnMo)
-
-for i in range(0, len(ndensityEnY)):
-    for j in range(0, len(REnY)):
-        csa = 4*3.14*(REnY[j]**2)
-        CSAEnY.append(csa)
-        mfp = 1/(ndensityEnY[i]*csa)
-        MFPEnY.append(mfp)
-        sb = ((4*np.pi*(10**-7))*252e3*ndensityEnY[i]*150*1.6*(10**-19)*500)/2
-        SBEnY.append(sb)
 
 REnY = np.array(REnY)
 CSAEnY = np.array(CSAEnY)
@@ -170,31 +149,11 @@ MFPEnY = np.array(MFPEnY)
 ndensityEnY = np.array(ndensityEnY)
 SBEnY = np.array(SBEnY)
 
-for i in range(0, len(ndensityEnS)):
-    for j in range(0, len(REnS)):
-        csa = 4*3.14*(REnS[j]**2)
-        CSAEnS.append(csa)
-        mfp = 1/(ndensityEnS[i]*csa)
-        MFPEnS.append(mfp)
-        sb = ((4*np.pi*(10**-7))*252e3 *
-              ndensityEnS[i]*150*1.6*(10**-19)*1000)/2
-        SBEnS.append(sb)
-
 REnS = np.array(REnS)
 CSAEnS = np.array(CSAEnS)
 MFPEnS = np.array(MFPEnS)
 ndensityEnS = np.array(ndensityEnS)
 SBEnS = np.array(SBEnS)
-
-for i in range(0, len(ndensityEnE)):
-    for j in range(0, len(REnE)):
-        csa = 4*3.14*(REnE[j]**2)
-        CSAEnE.append(csa)
-        mfp = 1/(ndensityEnE[i]*csa)
-        MFPEnE.append(mfp)
-        sb = ((4*np.pi*(10**-7))*252e3 *
-              ndensityEnE[i]*150*1.6*(10**-19)*800)/2
-        SBEnE.append(sb)
 
 REnE = np.array(REnE)
 CSAEnE = np.array(CSAEnE)
@@ -202,31 +161,11 @@ MFPEnE = np.array(MFPEnE)
 ndensityEnE = np.array(ndensityEnE)
 SBEnE = np.array(SBEnE)
 
-for i in range(0, len(ndensityEnK)):
-    for j in range(0, len(REnK)):
-        csa = 4*3.14*(REnK[j]**2)
-        CSAEnK.append(csa)
-        mfp = 1/(ndensityEnK[i]*csa)
-        MFPEnK.append(mfp)
-        sb = ((4*np.pi*(10**-7))*252e3 *
-              ndensityEnK[i]*150*1.6*(10**-19)*500)/2
-        SBEnK.append(sb)
-
 REnK = np.array(REnK)
 CSAEnK = np.array(CSAEnK)
 MFPEnK = np.array(MFPEnK)
 ndensityEnK = np.array(ndensityEnK)
 SBEnK = np.array(SBEnK)
-
-for i in range(0, len(ndensityEnW)):
-    for j in range(0, len(REnW)):
-        csa = 4*3.14*(REnW[j]**2)
-        CSAEnW.append(csa)
-        mfp = 1/(ndensityEnW[i]*csa)
-        MFPEnW.append(mfp)
-        sb = ((4*np.pi*(10**-7))*252e3 *
-              ndensityEnW[i]*150*1.6*(10**-19)*400)/2
-        SBEnW.append(sb)
 
 REnW = np.array(REnW)
 CSAEnW = np.array(CSAEnW)
@@ -330,7 +269,7 @@ plt.title("Number Density vs Cross-Section Area for Dust")
 # Plot labels
 plt.xlabel("Cross-Section Area (m²)", fontsize=14)
 plt.ylabel("Number Density (m⁻³)", fontsize=14)
-ax.legend(loc='lower left', fontsize=7.91, edgecolor='black')
+ax.legend(loc='lower left', fontsize=7, edgecolor='black')
 
 # Create lists to contain all the combined data
 all_CSA = []
@@ -405,14 +344,17 @@ heatmap = ax.pcolormesh(
                  vmax=10**z.max()),  # Logarithmic color scaling
     shading='auto'  # Avoid grid artifacts
 )
+specific_lines = [10, 17.3, 190]
+sp_log_lines = np.log10(specific_lines)
+lista_colori = ['cyan', 'lime', 'yellow']
 
 # Add contour lines
 contour_levels = np.logspace(np.floor(z.min()), np.ceil(z.max()), num=10)
 contours = ax.contour(
     10**X_grid, 10**Y_grid, 10**Z_grid,
-    levels=contour_levels, colors='black', linewidths=1
+    levels=sp_log_lines, colors=lista_colori, linewidths=1
 )
-ax.clabel(contours, inline=True, fontsize=10, fmt="%.1f nT")
+# ax.clabel(contours, inline=True, fontsize=10, fmt="%.1f nT")
 
 
 # Add a colorbar
@@ -501,7 +443,8 @@ plt.tight_layout()
 plt.show()
 
 
-# Save the values from all_CSA, all_MFP and all magn perturbation valuesinto a text file
+# Save the values from all_CSA, all_MFP and
+# all magn perturbation valuesinto a text file
 with open("CSA_MFP_SB_2_data.txt", "w") as file:
     file.write("# Cross-Section Area and Mean Free Path Data\n")
     file.write("# Format: Origin | CSA (m²) | MFP (m) "
