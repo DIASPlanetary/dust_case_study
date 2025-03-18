@@ -302,7 +302,7 @@ all_SB = np.array(all_SB)
 # Define a grid for the background
 x = np.log10(all_CSA)  # Log scale for cross-sectional area
 y = np.log10(all_ndensity)  # Log scale for number density
-z = np.log10(all_SB*(10**9))  # Log scale for magnetic perturbation
+z = np.log10((mu0 * 1800e3 * all_ndensity * 150 * elec * 500 * (10**9)) / 2)
 
 # Mask out invalid values (nan or infinity)
 mask = ~(np.isinf(x) | np.isnan(x) | (x == 0) |
@@ -325,10 +325,13 @@ x_grid = np.linspace(x.min() - x_margin * x_range,
 y_grid = np.linspace(y.min() - y_margin * y_range,
                      y.max() + y_margin * y_range, 200)
 X_grid, Y_grid = np.meshgrid(x_grid, y_grid)
-print(Y_grid)
 
-Z_grid = (mu0*1500*Y_grid*150*elec*500*(10**9))/2
-print(Z_grid)
+# Interpolate using RBFInterpolator
+points = np.vstack((x, y)).T
+rbf = RBFInterpolator(points, z, kernel='linear', epsilon=1)
+
+# Compute Z_grid
+Z_grid = rbf(np.vstack((X_grid.ravel(), Y_grid.ravel())).T).reshape(X_grid.shape)
 
 # Plot the heatmap with pcolormesh
 fig, ax = plt.subplots(figsize=(12, 10))
@@ -336,8 +339,8 @@ heatmap = ax.pcolormesh(
     10**X_grid, 10**Y_grid,
     10**Z_grid,  # Convert back from log scale for axes and color
     cmap='plasma',
-    norm=LogNorm(vmin=10**Z_grid.min(),
-                 vmax=10**Z_grid.max()),  # Logarithmic color scaling
+    norm=LogNorm(vmin=10**z.min(),
+                 vmax=10**z.max()),  # Logarithmic color scaling
     shading='auto'  # Avoid grid artifacts
 )
 specific_lines = [10, 17.3, 190]
@@ -345,9 +348,9 @@ sp_log_lines = np.log10(specific_lines)
 lista_colori = ['cyan', 'lime', 'yellow']
 
 # Add contour lines
-contour_levels = np.logspace(np.floor(z.min()), np.ceil(z.max()), num=10)
+contour_levels = np.logspace(np.floor(Z_grid.min()), np.ceil(Z_grid.max()), num=10)
 contours = ax.contour(
-    10**X_grid, 10**Y_grid, 10**Z_grid,
+    10**X_grid, 10**Y_grid, Z_grid,
     levels=sp_log_lines, colors=lista_colori, linewidths=1
 )
 # ax.clabel(contours, inline=True, fontsize=10, fmt="%.1f nT")
