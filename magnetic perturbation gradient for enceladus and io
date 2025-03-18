@@ -325,21 +325,19 @@ x_grid = np.linspace(x.min() - x_margin * x_range,
 y_grid = np.linspace(y.min() - y_margin * y_range,
                      y.max() + y_margin * y_range, 200)
 X_grid, Y_grid = np.meshgrid(x_grid, y_grid)
+print(Y_grid)
 
-# Interpolate the data using RBFInterpolator
-points = np.vstack((x, y)).T
-rbf = RBFInterpolator(points, z, kernel='linear', epsilon=1)
-Z_grid = rbf(np.vstack((X_grid.ravel(),
-                        Y_grid.ravel())).T).reshape(X_grid.shape)
+Z_grid = (mu0*1500*Y_grid*150*elec*500*(10**9))/2
+print(Z_grid)
 
 # Plot the heatmap with pcolormesh
 fig, ax = plt.subplots(figsize=(12, 10))
 heatmap = ax.pcolormesh(
-    10**x_grid, 10**y_grid,
+    10**X_grid, 10**Y_grid,
     10**Z_grid,  # Convert back from log scale for axes and color
     cmap='plasma',
-    norm=LogNorm(vmin=10**z.min(),
-                 vmax=10**z.max()),  # Logarithmic color scaling
+    norm=LogNorm(vmin=10**Z_grid.min(),
+                 vmax=10**Z_grid.max()),  # Logarithmic color scaling
     shading='auto'  # Avoid grid artifacts
 )
 specific_lines = [10, 17.3, 190]
