@@ -13,9 +13,7 @@ from scipy.spatial import ConvexHull
 
 
 def clean_array(arr):
-    """
-    Removes infinite, NaN, and zero values from a NumPy array.
-    """
+    # Removes infinite, NaN, and zero values from a NumPy array
     arr = np.array(arr)  # Ensure input is a NumPy array
     mask = ~np.isinf(arr) & ~np.isnan(arr) & (arr != 0)
     return arr[mask]
