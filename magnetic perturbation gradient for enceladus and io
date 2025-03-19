@@ -302,7 +302,7 @@ all_SB = np.array(all_SB)
 # Define a grid for the background
 x = np.log10(all_CSA)  # Log scale for cross-sectional area
 y = np.log10(all_ndensity)  # Log scale for number density
-z = np.log10((mu0 * 1800e3 * all_ndensity * 150 * elec * 500 * (10**9)) / 2)
+z = np.log10((mu0 * 1800e3 * all_ndensity * 150 * elec * 900 * (10**9)) / 2)
 
 # Mask out invalid values (nan or infinity)
 mask = ~(np.isinf(x) | np.isnan(x) | (x == 0) |
@@ -331,7 +331,8 @@ points = np.vstack((x, y)).T
 rbf = RBFInterpolator(points, z, kernel='linear', epsilon=1)
 
 # Compute Z_grid
-Z_grid = rbf(np.vstack((X_grid.ravel(), Y_grid.ravel())).T).reshape(X_grid.shape)
+Z_grid = rbf(np.vstack((X_grid.ravel(),
+                        Y_grid.ravel())).T).reshape(X_grid.shape)
 
 # Plot the heatmap with pcolormesh
 fig, ax = plt.subplots(figsize=(12, 10))
@@ -348,7 +349,6 @@ sp_log_lines = np.log10(specific_lines)
 lista_colori = ['cyan', 'lime', 'yellow']
 
 # Add contour lines
-contour_levels = np.logspace(np.floor(Z_grid.min()), np.ceil(Z_grid.max()), num=10)
 contours = ax.contour(
     10**X_grid, 10**Y_grid, Z_grid,
     levels=sp_log_lines, colors=lista_colori, linewidths=1
