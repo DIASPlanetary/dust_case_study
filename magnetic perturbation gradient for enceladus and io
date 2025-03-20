@@ -272,7 +272,7 @@ all_SB = np.array(all_SB)
 # Define a grid for the background
 x = np.log10(all_CSA)  # Log scale for cross-sectional area
 y = np.log10(all_ndensity)  # Log scale for number density
-z = np.log10((mu0 * 1800e3 * all_ndensity * 150 * elec * 900 * (10**9)) / 2)
+z = np.log10(all_SB*10**9)
 
 # Mask out invalid values (nan or infinity)
 mask = ~(np.isinf(x) | np.isnan(x) | (x == 0) |
