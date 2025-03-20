@@ -238,36 +238,6 @@ for m in range(0, 1):
 for m in range(1, 2):
     Y_EnW.append(ndensityEnW[1])
 
-# Plot the individual sets on a scatter plot
-fig, ax = plt.subplots()
-ax.scatter(X_EnM, Y_EnM, label='Enceladus Meier et al., 2015',
-           marker='D', color='g')
-ax.scatter(X_IA, Y_IA, label='Io Adeloye et al., 2025',
-           marker='x', color='y')
-ax.scatter(X_EnMo, Y_EnMo, label='Enceladus Morooka et al., 2011',
-           marker='s', color='g')
-ax.scatter(X_EnY, Y_EnY, label='Enceladus Yaroshenko et al., 2009',
-           marker='.', color='g')
-ax.scatter(X_EnS, Y_EnS, label='Enceladus Shafiq et al., 2010',
-           marker='X', color='g')
-ax.scatter(X_EnE, Y_EnE, label='Enceladus Ershova et al., 2024',
-           marker='H', color='g')
-ax.scatter(X_EnK, Y_EnK, label='Enceladus Kempf et al., 2010',
-           marker='^', color='g')
-ax.scatter(X_EnW, Y_EnW, label='Enceladus Waite et al., 2006',
-           marker='<', color='g')
-
-# To visualize all points easly, both axis are set with log scale
-ax.set_yscale('log')
-ax.set_xscale('log')
-
-# Plot title
-plt.title("Number Density vs Cross-Section Area for Dust")
-
-# Plot labels
-plt.xlabel("Cross-Section Area (m²)", fontsize=14)
-plt.ylabel("Number Density (m⁻³)", fontsize=14)
-ax.legend(loc='lower left', fontsize=7, edgecolor='black')
 
 # Create lists to contain all the combined data
 all_CSA = []
@@ -333,7 +303,7 @@ rbf = RBFInterpolator(points, z, kernel='linear', epsilon=1)
 # Compute Z_grid
 Z_grid = rbf(np.vstack((X_grid.ravel(),
                         Y_grid.ravel())).T).reshape(X_grid.shape)
-
+print(Z_grid)
 # Plot the heatmap with pcolormesh
 fig, ax = plt.subplots(figsize=(12, 10))
 heatmap = ax.pcolormesh(
@@ -346,7 +316,7 @@ heatmap = ax.pcolormesh(
 )
 specific_lines = [10, 17.3, 190]
 sp_log_lines = np.log10(specific_lines)
-lista_colori = ['cyan', 'lime', 'yellow']
+lista_colori = ['blue', 'green', 'yellow']
 
 # Add contour lines
 contours = ax.contour(
