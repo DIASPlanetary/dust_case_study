@@ -8,7 +8,7 @@ Created on Mon Mar 10 13:57:39 2025
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
-from scipy.interpolate import RBFInterpolator
+from scipy.interpolate import interp1d
 from scipy.spatial import ConvexHull
 
 
@@ -287,23 +287,27 @@ z = z[mask]
 # Define a grid for plotting with expanded edges
 x_margin = 0.1  # Margin as a fraction of the range
 y_margin = 0.1
+z_margin = 0.1
 x_range = x.max() - x.min()
 y_range = y.max() - y.min()
+z_range = z.max() - z.min()
 
 x_grid = np.linspace(x.min() - x_margin * x_range,
                      x.max() + x_margin * x_range, 200)
 y_grid = np.linspace(y.min() - y_margin * y_range,
                      y.max() + y_margin * y_range, 200)
+z_grid = np.linspace(z.min() - z_margin * z_range,
+                     z.max() + z_margin * z_range, 200)
+
 X_grid, Y_grid = np.meshgrid(x_grid, y_grid)
 
 # Interpolate using RBFInterpolator
 points = np.vstack((x, y)).T
-rbf = RBFInterpolator(points, z, kernel='linear', epsilon=1)
 
-# Compute Z_grid
-Z_grid = rbf(np.vstack((X_grid.ravel(),
-                        Y_grid.ravel())).T).reshape(X_grid.shape)
-print(Z_grid)
+interp_func = interp1d(y_grid, z_grid, kind='linear', fill_value="extrapolate")
+Z_grid = interp_func(Y_grid)
+
+
 # Plot the heatmap with pcolormesh
 fig, ax = plt.subplots(figsize=(12, 10))
 heatmap = ax.pcolormesh(
