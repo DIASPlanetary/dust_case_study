@@ -301,8 +301,6 @@ z_grid = np.linspace(z.min() - z_margin * z_range,
 
 X_grid, Y_grid = np.meshgrid(x_grid, y_grid)
 
-# Interpolate using RBFInterpolator
-points = np.vstack((x, y)).T
 
 interp_func = interp1d(y_grid, z_grid, kind='linear', fill_value="extrapolate")
 Z_grid = interp_func(Y_grid)
@@ -409,8 +407,19 @@ ax.set_ylabel("Number Density (m⁻³)", fontsize=14)
 ax.set_title("Dust case study Magnetic perturbation colormap", fontsize=18)
 
 
-# Add legend
-ax.legend(loc='upper right', fontsize=11, edgecolor='black')
+# Extract existing legend handles and labels
+handles, labels = ax.get_legend_handles_labels()
+
+# Add contour lines to legend
+contour_handles, contour_labels = contours.legend_elements()
+contour_labels = [
+    "Europa minimum perturbation (10 nT)",
+    "Enceladus minimum perturbation (17.3 nT)",
+    "Io minimum perturbation (190 nT)"]
+
+# Update legend with both scatter and contour handles
+ax.legend(handles + contour_handles, labels + contour_labels,
+          loc='upper right', fontsize=9.8, edgecolor='black')
 
 plt.tight_layout()
 plt.show()
