@@ -8,7 +8,6 @@ Created on Tue Jan 28 13:58:24 2025
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
-from scipy.interpolate import RBFInterpolator
 from scipy.spatial import ConvexHull
 
 elec = 1.6*(10**-19)
@@ -16,25 +15,24 @@ mu0 = 4*np.pi*(10**-7)
 
 
 def clean_array(arr):
-    """
-    Removes infinite, NaN, and zero values from a NumPy array.
-    """
+    # Removes infinite, NaN, and zero values from a NumPy array.
     arr = np.array(arr)  # Ensure input is a NumPy array
     mask = ~np.isinf(arr) & ~np.isnan(arr) & (arr != 0)
     return arr[mask]
 
 
 def data_processing(radius, density, velocity, radius_m):
+    # function to process the datasets
     CSA = []
     MFP = []
     SB = []
     for i in range(0, len(density)):
         for j in range(0, len(radius)):
-            csa = 4*np.pi*(radius[j]**2)
+            csa = 4*np.pi*(radius[j]**2)  # calculate MFP
             CSA.append(csa)
-            mfp = 1/(density[i]*csa)
+            mfp = 1/(density[i]*csa)  # calculate CSA
             MFP.append(mfp)
-            sb = (mu0*radius_m*density[i]*150*elec*velocity)/2
+            sb = (mu0*radius_m*density[i]*150*elec*velocity)/2  # calculate SB
             SB.append(sb)
     return CSA, MFP, SB
 
@@ -80,7 +78,6 @@ ndensityEuS = datasetEuS[1]
 CSAEuS = []
 MFPEuS = []
 SBEuS = []
-SBEuS = []
 
 REnM = datasetEnM[0]
 ndensityEnM = datasetEnM[1]
@@ -100,8 +97,6 @@ CSAIA = []
 MFPIA = []
 SBIA = []
 
-r_moon = [1560e3, 1821e3, 2410e3, 252e3]
-velocity = [5500]
 
 CSAEuK, MFPEuK, SBEuK = data_processing(REuK, ndensityEuK, 1560e3, 5500)
 CSAIK, MFPIK, SBIK = data_processing(RIK, ndensityIK, 1821e3, 10300)
@@ -128,7 +123,7 @@ SBIK = np.array(SBIK)
 RCK = np.array(RCK)
 CSACK = np.array(CSACK)
 MFPCK = np.array(MFPCK)
-ndensitCK = np.array(ndensityCK)
+ndensityCK = np.array(ndensityCK)
 SBCK = np.array(SBCK)
 
 RIM = np.array(RIM)
@@ -280,11 +275,7 @@ y_grid = np.linspace(y.min() - y_margin * y_range,
                      y.max() + y_margin * y_range, 200)
 X_grid, Y_grid = np.meshgrid(x_grid, y_grid)
 
-# Interpolate the data using RBFInterpolator
-points = np.vstack((x, y)).T
-rbf = RBFInterpolator(points, z, kernel='linear', epsilon=1)
-Z_grid = rbf(np.vstack((X_grid.ravel(),
-                        Y_grid.ravel())).T).reshape(X_grid.shape)
+Z_grid = np.log10(1 / (10**X_grid * 10**Y_grid))
 
 # Plot the heatmap with pcolormesh
 fig, ax = plt.subplots(figsize=(12, 10))
@@ -407,8 +398,23 @@ ax.set_ylabel("Number Density (m⁻³)", fontsize=14)
 ax.set_title("Mean Free Path Variation Across Moons colormap", fontsize=18)
 ax.set_ylim(0, 10e8)
 
-# Add legend
-ax.legend(loc='lower left', fontsize=10.9, edgecolor='black')
+# Extract existing legend handles and labels
+handles, labels = ax.get_legend_handles_labels()
+
+# Add contour lines to legend
+contour_handles, contour_labels = contours.legend_elements()
+contour_labels = [
+    "Europa Kruger closest approach (201 km)",
+    "Io Adeloye Tvashtar plume (300 km)",
+    "Callisto Kruger closest approach (415 km)",
+    "Enceladus Morooka Plume (750 km)",
+    "Io Kruger closest approach (892 km)",
+    "Solar System Radius (1.78e10 km)",
+    "1 Light Year (9.46e15 km)"]
+
+# Update legend with both scatter and contour handles
+ax.legend(handles + contour_handles, labels + contour_labels,
+          loc='upper right', fontsize=9.8, edgecolor='black')
 
 plt.tight_layout()
 plt.show()
