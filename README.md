@@ -1,1 +1,2 @@
-This repository is to study the possible inclusion of dust particles for future modelling of JUICE and Europ Clipper data.
+This repository contains the code used for the study of the role of dust in the Jovian moon environment, studying the likelyhood of their interaction in energetic ion depletion and with the magnetic field, in order to account for possible future scenarios in modelling for Europa Clipper (NASA) and JUICE (ESA) data, after their arrival around 2030.
+Developed by Enrico Marchisio, as part of INTRA placement
