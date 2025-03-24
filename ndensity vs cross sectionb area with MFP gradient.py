@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from scipy.spatial import ConvexHull
 
-elec = 1.6*(10**-19)
-mu0 = 4*np.pi*(10**-7)
+elec = 1.6*(10**-19) # Electron charge in Coulombs
+mu0 = 4*np.pi*(10**-7) # Permeability of free space, in N*A^-2
 
 
 def clean_array(arr):
